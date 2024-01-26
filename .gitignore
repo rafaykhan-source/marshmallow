@@ -1,0 +1,8 @@
+build
+data
+assignments
+messages
+logs
+src/bot/settings/.env
+src/bot/settings/resources
+**/__pycache__/**

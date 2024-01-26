@@ -1,0 +1,67 @@
+version: 1
+formatters:
+  default:
+    format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    datefmt: '%m/%d/%Y %I:%M:%S %p'
+handlers:
+  console:
+    class: logging.StreamHandler
+    level: DEBUG
+    formatter: default
+    stream: ext://sys.stdout
+  marshHandler:
+    class: logging.handlers.RotatingFileHandler
+    level: DEBUG
+    formatter: default
+    filename: logs/marshmallow.log
+    maxBytes: 524288 #.5MB
+    backupCount: 3
+    encoding: utf8
+  dpHandler:
+    class: logging.handlers.RotatingFileHandler
+    level: DEBUG
+    formatter: default
+    filename: logs/dataproducer.log
+    maxBytes: 524288 #.5MB
+    backupCount: 3
+    encoding: utf8
+  commandsHandler:
+    class: logging.handlers.RotatingFileHandler
+    level: DEBUG
+    formatter: default
+    filename: logs/commands.log
+    maxBytes: 524288 #.5MB
+    backupCount: 3
+    encoding: utf8
+  assignHandler:
+    class: logging.handlers.RotatingFileHandler
+    level: DEBUG
+    formatter: default
+    filename: logs/assign.log
+    maxBytes: 524288 #.5MB
+    backupCount: 3
+    encoding: utf8
+loggers:
+  run:
+    level: DEBUG
+    handlers: [console]
+    propagate: no
+  marshmallow:
+    level: DEBUG
+    handlers: [marshHandler]
+    propagate: no
+  dataproducer:
+    level: DEBUG
+    handlers: [dpHandler]
+    propagate: no
+  commands:
+    level: DEBUG
+    handlers: [commandsHandler]
+    propagate: no
+  assign:
+    level: DEBUG
+    handlers: [assignHandler]
+    propagate: no
+root:
+  level: DEBUG
+  handlers: [console]

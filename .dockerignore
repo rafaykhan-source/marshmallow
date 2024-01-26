@@ -1,0 +1,12 @@
+# Exclude All
+*
+
+# Make Exceptions Needed
+!src
+!data
+!assignments
+!messages
+!pyproject.toml
+!logs
+
+

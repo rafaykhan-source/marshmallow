@@ -1,0 +1,58 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.distutils.egg_info]
+egg_base = "build"
+
+[project]
+name = "marshmallow"
+version = "0.0.11"
+authors = [{ name = "Rafay K" }]
+maintainers = [{ name = "Rafay K" }]
+description = "Automates administrative and managerial tasks on Princeton EBCAO Discords."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = ["discord.py", "python-dotenv", "pandas", "pyyaml", "pytz"]
+
+[project.optional-dependencies]
+development = ["black", "ruff", "mypy", "pre-commit"]
+
+
+[tool.ruff]
+# Adjust line-length to match black formatter
+line-length = 88
+select = [
+    "F",   # pyflakes
+    "E",   # pycodestyle
+    "W",   # pycodestyle
+    "C90", # mccabe
+    "I",   # isort
+    "N",   # pep8-naming
+    "D",   # pydocstyle
+    "UP",  # pyupgrade
+    "ANN", # flake8-annotations
+    "BLE", # flake8-blind-except
+    "FBT", # flake8-boolean-trap
+    "B",   # flake8-bugbear
+    "A",   # flake8-builtins
+    "COM", # flake8-commas
+    "C4",  # flake8-comprehensions
+    "DTZ", # flake8-datetimez
+    "EM",  # flake8-errmsg
+    "EXE", # flake8-executable
+    "ICN", # flake8-import-conventions
+    "G",   # flake8-logging-format
+    "Q",   # flake8-quotes
+    "RET", # flake8-return
+    "SIM", # flake8-simplify
+    "ARG", # flake8-unused-arguments
+]
+include = ["*.py"]
+ignore = ["ANN101", "COM819"]
+
+[tool.ruff.pydocstyle]
+convention = "google"
+
+[tool.ruff.per-file-ignores]
+"__init__.py" = ["F401"]
