@@ -66,6 +66,7 @@ def get_admin_roles() -> list[str]:
     return [
         "EBCAO Discord Admin",
         "SIFP Discord Admin",
+        "FSI Discord Admin",
         "Tech CA",
         "Admin",
     ]
