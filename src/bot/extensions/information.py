@@ -73,7 +73,7 @@ class Information(commands.Cog):
         )
         embed.set_thumbnail(url="attachment://marshmallow_icon.png")
         embed.set_footer(
-            text="Originally Developed by Rafay K",
+            text="Originally Developed by Rafay K '25",
             icon_url="attachment://marshmallow_icon.png",
         )
 
