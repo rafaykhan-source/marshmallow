@@ -18,9 +18,7 @@ dependencies = ["discord.py", "python-dotenv", "pandas", "pyyaml", "pytz"]
 [project.optional-dependencies]
 development = ["ruff", "mypy", "pre-commit"]
 
-
 [tool.ruff]
-line-length = 88
 select = [
     "F",   # pyflakes
     "E",   # pycodestyle
@@ -47,11 +45,11 @@ select = [
     "SIM", # flake8-simplify
     "ARG", # flake8-unused-arguments
 ]
+ignore = ["ANN101", "COM819", "COM812"]
 include = ["*.py"]
-ignore = ["ANN101", "COM819"]
-
-[tool.ruff.pydocstyle]
-convention = "google"
 
 [tool.ruff.per-file-ignores]
 "__init__.py" = ["F401"]
+
+[tool.ruff.pydocstyle]
+convention = "google"
