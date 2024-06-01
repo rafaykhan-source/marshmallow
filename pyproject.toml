@@ -7,7 +7,7 @@ egg_base = "build"
 
 [project]
 name = "marshmallow"
-version = "0.0.11"
+version = "0.0.12"
 authors = [{ name = "Rafay K" }]
 maintainers = [{ name = "Rafay K" }]
 description = "Automates administrative and managerial tasks on Princeton EBCAO Discords."
@@ -16,11 +16,10 @@ requires-python = ">=3.10"
 dependencies = ["discord.py", "python-dotenv", "pandas", "pyyaml", "pytz"]
 
 [project.optional-dependencies]
-development = ["black", "ruff", "mypy", "pre-commit"]
+development = ["ruff", "mypy", "pre-commit"]
 
 
 [tool.ruff]
-# Adjust line-length to match black formatter
 line-length = 88
 select = [
     "F",   # pyflakes
