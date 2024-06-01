@@ -84,15 +84,13 @@ async def is_valid_assignment(ctx: commands.Context, assignment_group: str) -> b
                     f"Invalid assignment group for this guild. Options: {options}.",
                 )
                 return False
-        case Server.MARSHMALLOW_DEV:
-            return True
         case Server.SIFP:
             options = {"sifpstudent", "sifpstaff", "mentorgroups"}
             if assignment_group not in options:
                 await ctx.send(
                     f"Invalid assignment group for this guild. Options: {options}.",
                 )
-            return True
+                return False
         case _:
             await ctx.send("Unsupported Guild.")
             return False
