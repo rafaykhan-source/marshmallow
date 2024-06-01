@@ -1,4 +1,5 @@
 """This package represents Marshmallow's custom settings/configuration."""
+
 from settings.config import (
     Server,
     get_admin_roles,
