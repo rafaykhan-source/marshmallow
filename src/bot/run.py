@@ -1,5 +1,6 @@
 """This module is responsible for running Marshmallow."""
 
+import asyncio
 import logging
 import logging.config
 
@@ -17,21 +18,22 @@ def __configure_logging() -> None:
     return
 
 
-def main() -> None:
+async def main() -> None:
     """Runs Marshmallow."""
     __configure_logging()
 
     logger.info("Instantiating Marshmallow Bot Client.")
-    bot = MarshmallowBotClient()
+    marsh = MarshmallowBotClient()
 
     logger.info("Retrieving Token.")
     TOKEN = stg.get_token()  # noqa
 
-    logger.info("Starting Marshmallow.")
-    bot.run(TOKEN, log_handler=None)
+    async with marsh as bot:
+        logger.info("Starting Marshmallow.")
+        await bot.start(TOKEN)
 
     return
 
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
