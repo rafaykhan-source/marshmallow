@@ -2,6 +2,18 @@
 
 Automates administrative and managerial tasks on Princeton EBCAO Discords.
 
+## Configuration:
+
+In the `marshmallow` directory:
+
+`./scripts/setup.sh`
+
+Create the virtual environment:
+
+`python3 -m venv ~/.virtualenvs/marshmallow && source ~/.virtualenvs/marshmallow/bin/activate`
+
+`pip install . && pip install .[development]`
+
 ## Start Up (Docker Compose):
 
 `docker-compose up --build -d`
@@ -9,6 +21,7 @@ Automates administrative and managerial tasks on Princeton EBCAO Discords.
 ## Start Up (Docker):
 
 `docker build -t marshmallow-main:latest .`
+
 `docker container run --rm --detach --name marsh marshmallow-main`
 
 ## Acknowledgements
