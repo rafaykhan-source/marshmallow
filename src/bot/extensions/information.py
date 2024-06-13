@@ -83,6 +83,7 @@ class Information(commands.Cog):
         return
 
     @commands.hybrid_command()
+    @commands.guild_only()
     @commands.has_any_role(*stg.get_admin_roles())
     async def info(self, ctx: commands.Context, member: discord.Member) -> None:
         """Sends member information.
@@ -131,6 +132,7 @@ class Information(commands.Cog):
         return
 
     @commands.hybrid_command()
+    @commands.guild_only()
     @commands.has_any_role(*stg.get_admin_roles())
     async def get_channel_activity(
         self,
