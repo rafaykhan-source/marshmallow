@@ -16,7 +16,7 @@ Create the virtual environment:
 
 ## Start Up (Docker Compose):
 
-`docker-compose up --build -d`
+`docker-compose up --build -d --force-recreate`
 
 ## Start Up (Docker):
 
