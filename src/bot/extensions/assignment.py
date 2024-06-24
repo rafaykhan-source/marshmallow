@@ -64,14 +64,14 @@ async def is_valid_assignment(ctx: commands.Context, assignment_group: str) -> b
 
     match ctx.guild.id:
         case Server.FSI_ONLINE:
-            options = {"onlscholars", "onlstaff", "onlzees", "onlwok"}
+            options = {"online"}
             if assignment_group not in options:
                 await ctx.send(
                     f"Invalid assignment group for this guild. Options: {options}.",
                 )
                 return False
         case Server.FSI_RESIDENTIAL:
-            options = {"resscholars", "resstaff", "reszees", "rescourses"}
+            options = {"residential"}
             if assignment_group not in options:
                 await ctx.send(
                     f"Invalid assignment group for this guild. Options: {options}.",
