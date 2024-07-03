@@ -4,6 +4,7 @@ The assignment module primarily operating on a Person ADT,
 storing assignment result information.
 """
 
+import asyncio
 import logging
 
 import dataproducer as dp
@@ -12,7 +13,7 @@ import settings as stg
 import utility.datahandler as dh
 import utility.processor as prep
 from discord import Color, Embed
-from discord.ext import commands
+from discord.ext import commands, tasks
 from settings import Server
 
 logger = logging.getLogger("assign")
@@ -57,7 +58,7 @@ async def is_valid_assignment(ctx: commands.Context, assignment_group: str) -> b
         assignment_group (str): The assignment group.
 
     Returns:
-        bool: whether assign command call is valid
+        bool: A valid assign command call.
     """
     if not ctx.guild:
         return False
@@ -112,6 +113,39 @@ class Assignment(commands.Cog):
         """Instantiates the Assignment Cog."""
         self.bot: commands.Bot = bot
         "The cog's associated bot client."
+        self.lock = asyncio.Lock()
+        "The cog's lock."
+        return
+
+    @tasks.loop(minutes=10.0)
+    async def assigner(self, ctx: commands.Context, assignment_group: str) -> None:
+        """The protocol responsible for automatic role assignment.
+
+        Args:
+            ctx (commands.Context): The context object for automatic role assignment.
+            assignment_group (str): The desired assignment group.
+        """
+        async with self.lock:
+            await self.assign(ctx, assignment_group)
+        return
+
+    @commands.hybrid_command()
+    @commands.guild_only()
+    @commands.has_any_role(*stg.get_admin_roles())
+    @commands.has_permissions(manage_roles=True)
+    async def start_assigner(self, ctx: commands.Context, assignment_group: str) -> None:
+        """Starts the automatic role assignment protocol."""
+        self.assigner.start(ctx, assignment_group)
+        return
+
+    @commands.hybrid_command()
+    @commands.guild_only()
+    @commands.has_any_role(*stg.get_admin_roles())
+    @commands.has_permissions(manage_roles=True)
+    async def stop_assigner(self, ctx: commands.Context) -> None:
+        """Stops the automatic role assignment protocol."""
+        self.assigner.cancel()
+        await ctx.send("Stopped Assigner Protocol.")
         return
 
     @commands.hybrid_command()
