@@ -57,7 +57,7 @@ async def is_valid_assignment(ctx: commands.Context, assignment_group: str) -> b
         assignment_group (str): The assignment group.
 
     Returns:
-        bool: whether assign command call is valid
+        bool: A valid assign command call.
     """
     if not ctx.guild:
         return False
