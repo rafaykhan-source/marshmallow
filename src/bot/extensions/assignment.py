@@ -141,9 +141,10 @@ class Assignment(commands.Cog):
     @commands.guild_only()
     @commands.has_any_role(*stg.get_admin_roles())
     @commands.has_permissions(manage_roles=True)
-    async def start_assigner(self, ctx: commands.Context, assignment_group: str) -> None:
+    async def start_assigner(self, ctx: commands.Context) -> None:
         """Starts the automatic role assignment protocol."""
-        self.assigner.start(ctx, assignment_group)
+        await ctx.send("Started Assigner Protocol.")
+        self.assigner.start()
         return
 
     @commands.hybrid_command()
