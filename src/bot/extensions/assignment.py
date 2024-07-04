@@ -189,6 +189,7 @@ class Assignment(commands.Cog):
         if not await is_valid_assignment(ctx, assignment_group):
             return
 
+        self.cache_assignment(ctx, assignment_group)
         people = dp.get_people(assignment_group)
         member_alias_map = prep.create_member_alias_map(ctx.guild.members)
 
