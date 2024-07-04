@@ -119,16 +119,17 @@ class Assignment(commands.Cog):
         "The cog's cache for automatic role assignments."
         return
 
-    @tasks.loop(minutes=10.0)
-    async def assigner(self, ctx: commands.Context, assignment_group: str) -> None:
+    @tasks.loop(minutes=15.0)
+    async def assigner(self) -> None:
         """The protocol responsible for automatic role assignment.
 
         Args:
             ctx (commands.Context): The context object for automatic role assignment.
             assignment_group (str): The desired assignment group.
         """
-        async with self.lock:
-            await self.assign(ctx, assignment_group)
+        for assignment_group, ctx in self.assign_cache.items():
+            async with self.lock:
+                await self.assign(ctx, assignment_group)
         return
 
     def cache_assignment(self, ctx: commands.Context, assignment_group: str) -> None:
