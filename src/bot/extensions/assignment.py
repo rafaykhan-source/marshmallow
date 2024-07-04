@@ -115,6 +115,8 @@ class Assignment(commands.Cog):
         "The cog's associated bot client."
         self.lock = asyncio.Lock()
         "The cog's lock."
+        self.assign_cache: dict[str, commands.Context] = {}
+        "The cog's cache for automatic role assignments."
         return
 
     @tasks.loop(minutes=10.0)
@@ -127,6 +129,11 @@ class Assignment(commands.Cog):
         """
         async with self.lock:
             await self.assign(ctx, assignment_group)
+        return
+
+    def cache_assignment(self, ctx: commands.Context, assignment_group: str) -> None:
+        """Caches the assignment task."""
+        self.assign_cache[assignment_group] = ctx
         return
 
     @commands.hybrid_command()
