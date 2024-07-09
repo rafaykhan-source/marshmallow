@@ -115,27 +115,36 @@ class Assignment(commands.Cog):
         "The cog's associated bot client."
         self.lock = asyncio.Lock()
         "The cog's lock."
+        self.assign_cache: dict[str, commands.Context] = {}
+        "The cog's cache for automatic role assignments."
         return
 
-    @tasks.loop(minutes=10.0)
-    async def assigner(self, ctx: commands.Context, assignment_group: str) -> None:
+    @tasks.loop(minutes=15.0)
+    async def assigner(self) -> None:
         """The protocol responsible for automatic role assignment.
 
         Args:
             ctx (commands.Context): The context object for automatic role assignment.
             assignment_group (str): The desired assignment group.
         """
-        async with self.lock:
-            await self.assign(ctx, assignment_group)
+        for assignment_group, ctx in self.assign_cache.items():
+            async with self.lock:
+                await self.assign(ctx, assignment_group)
+        return
+
+    def cache_assignment(self, ctx: commands.Context, assignment_group: str) -> None:
+        """Caches the assignment task."""
+        self.assign_cache[assignment_group] = ctx
         return
 
     @commands.hybrid_command()
     @commands.guild_only()
     @commands.has_any_role(*stg.get_admin_roles())
     @commands.has_permissions(manage_roles=True)
-    async def start_assigner(self, ctx: commands.Context, assignment_group: str) -> None:
+    async def start_assigner(self, ctx: commands.Context) -> None:
         """Starts the automatic role assignment protocol."""
-        self.assigner.start(ctx, assignment_group)
+        await ctx.send("Started Assigner Protocol.")
+        self.assigner.start()
         return
 
     @commands.hybrid_command()
@@ -181,6 +190,7 @@ class Assignment(commands.Cog):
         if not await is_valid_assignment(ctx, assignment_group):
             return
 
+        self.cache_assignment(ctx, assignment_group)
         people = dp.get_people(assignment_group)
         member_alias_map = prep.create_member_alias_map(ctx.guild.members)
 
