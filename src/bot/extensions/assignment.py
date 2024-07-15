@@ -12,7 +12,7 @@ import discord
 import settings as stg
 import utility.datahandler as dh
 import utility.dutils as du
-import utility.processor as prep
+import utility.processor as pr
 from discord.ext import commands, tasks
 from settings import Server
 
@@ -188,7 +188,7 @@ class Assignment(commands.Cog):
 
         self.cache_assignment(ctx, assignment_group)
         people = dp.get_people(assignment_group)
-        member_alias_map = prep.create_member_alias_map(ctx.guild.members)
+        member_alias_map = pr.create_member_alias_map(ctx.guild.members)
 
         for person in people:
             person.set_guild_member(member_alias_map)
@@ -233,7 +233,7 @@ class Assignment(commands.Cog):
             assignment_group,
             ctx.guild.name,
         )
-        await prep.send_failed_assignments(ctx, assignment_group)
+        await pr.send_failed_assignments(ctx, assignment_group)
 
         return
 

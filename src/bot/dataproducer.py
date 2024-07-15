@@ -50,6 +50,15 @@ def __load_data(csv_name: str) -> pd.DataFrame:
 
     return data
 
+def __create_affinity_person(row: list) -> dict:
+    return {"full_name": row[0],
+            "email":row[1],
+            "affinity_groups": row[2].split(","),
+            "alg_names":row[3].split(",")}
+
+def get_affinity_people() -> list[dict]:
+    data = __get_assignment_group_data("affinity")
+    return list(map(__create_affinity_person, data.values.tolist()))
 
 def __get_assignment_group_data(assignment_group: str) -> pd.DataFrame:
     """Returns assignment group data for specified assignment group.

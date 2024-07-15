@@ -15,6 +15,26 @@ import utility.dutils as du
 logger = logging.getLogger("assign")
 
 
+def is_name_match(aliases: list[str], alg_names: list[str]) -> bool:
+    """Returns whether there is a match in aliases and alg_names.
+
+    Note that a "match" is really a substring match of alg_name in alias.
+
+    Args:
+        aliases (list[str]): Cleaned aliases of an individual (from discord).
+        alg_names (list[str]): Cleaned names of an individual (from spreadsheet).
+
+    Returns:
+        bool: Presence of a Name Match.
+    """
+    for alg_name in alg_names:
+        for alias in aliases:
+            if alg_name in alias:
+                return True
+
+    return False
+
+
 def __clean_name(name: str) -> str:
     """Strips name of whitespace, non-alphabetical characters and makes it lowercase.
 
