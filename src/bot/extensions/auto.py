@@ -5,8 +5,11 @@ This module maintains role-based role auto-assignments.
 
 import logging
 
+import dataproducer as dp
 import discord
 import settings as stg
+import utility.dmaps as dm
+import utility.processor as pr
 from discord.ext import commands
 from settings import Server
 
@@ -127,6 +130,83 @@ class Auto(commands.Cog):
         await ctx.send("*Finished Nation Role Assignments.*")
 
         return
+
+    @commands.hybrid_command()
+    @commands.guild_only()
+    @commands.has_any_role(*stg.get_admin_roles())
+    @commands.has_permissions(manage_roles=True)
+    async def assign_affinity(self, ctx: commands.Context) -> None:  # noqa: C901
+        """Assigns affinity groups.
+
+        Args:
+            ctx (commands.Context): The command context.
+        """
+        if not ctx.guild:
+            return
+
+        logger.info(
+            "%s called command 'assign_affinity' in %s.",
+            ctx.author.display_name,
+            ctx.guild.name,
+        )
+
+        people = dp.get_affinity_people()
+        missing = []
+        text_to_voice = {
+            "fli-rural": "FLI Rural",
+            "fli-muslim": "FLI Muslim",
+            "fli-apida": "FLI APIDA",
+            "fli-black": "FLI Black",
+            "fli-christian": "FLI Christian",
+            "fli-latine": "FLI Latine",
+            "fli-women-femmes-of-color": "FLI Women and Femme of Color",
+            "fli-ability": "FLI Ability",
+            "fli-transfer-and-vets": "FLI Transfers And Vets",
+            "q-q-f-f": "QQFF",
+            "fli-indigenous": "FLI Indigenous",
+            "fli-international": "FLI International",
+        }
+
+        text_channels = await dm.get_channel_map(ctx, list(text_to_voice.keys()))
+        voice_channels = await dm.get_channel_map(ctx, list(text_to_voice.values()))
+
+        for person in people:
+            member = None
+            member_alias_map = pr.create_member_alias_map(ctx.guild.members)
+            alg_names = person["alg_names"]
+            for mem, aliases in member_alias_map.items():
+                if pr.is_name_match(aliases, alg_names):
+                    member = mem
+
+            channels = []
+            groups = person["affinity_groups"]
+            for group in groups:
+                if group in text_channels:
+                    channels.append(text_channels[group])
+                if group in voice_channels:
+                    channels.append(voice_channels[group])
+
+            print([ch.name for ch in channels])
+            for channel in channels:
+                if not channel:
+                    continue
+                overwrite = discord.PermissionOverwrite()
+                if isinstance(channel, discord.TextChannel):
+                    overwrite.send_messages = True
+                    overwrite.read_messages = True
+                    overwrite.read_message_history = True
+                if isinstance(channel, discord.VoiceChannel):
+                    overwrite.connect = True
+                    overwrite.use_soundboard = True
+                    overwrite.use_voice_activation = True
+                    overwrite.speak = True
+                    overwrite.view_channel = True
+                    overwrite.stream = True
+                if member:
+                    await channel.set_permissions(member, overwrite=overwrite)
+                    print(channel.name, member.display_name)
+                else:
+                    missing.append(person["full_name"])
 
 
 async def setup(bot: commands.Bot) -> None:

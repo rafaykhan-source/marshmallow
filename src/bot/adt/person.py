@@ -18,29 +18,10 @@ import logging
 
 import discord
 import discord.utils
+import utility.processor as pr
 from discord.ext import commands
 
 logger = logging.getLogger("assign")
-
-
-def _is_name_match(aliases: list[str], alg_names: list[str]) -> bool:
-    """Returns whether there is a match in aliases and alg_names.
-
-    Note that a "match" is really a substring match of alg_name in alias.
-
-    Args:
-        aliases (list[str]): Cleaned aliases of an individual (from discord).
-        alg_names (list[str]): Cleaned names of an individual (from spreadsheet).
-
-    Returns:
-        bool: Presence of a Name Match.
-    """
-    for alg_name in alg_names:
-        for alias in aliases:
-            if alg_name in alias:
-                return True
-
-    return False
 
 
 class Person:
@@ -107,7 +88,7 @@ class Person:
             return
 
         for member, aliases in members_to_aliases.items():
-            if _is_name_match(aliases, self.alg_names):
+            if pr.is_name_match(aliases, self.alg_names):
                 self.guild_member = member
                 return
 
