@@ -69,6 +69,10 @@ def get_admin_roles() -> list[str]:
         "FSI Discord Admin",
         "Tech CA",
         "Admin",
+        "RCA",
+        "VCA",
+        "VGS",
+        "RGS",
     ]
 
 
