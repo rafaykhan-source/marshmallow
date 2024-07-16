@@ -159,6 +159,30 @@ class Information(commands.Cog):
 
         await ctx.send("Channel Activity Logged.")
 
+    @commands.hybrid_command()
+    @commands.guild_only()
+    @commands.has_any_role(*stg.get_admin_roles())
+    async def get_voice_channel_attendees(
+        self, ctx: commands.Context, channel: discord.VoiceChannel
+    ) -> None:
+        """Displays the current members in the specified voice channel.
+
+        Args:
+            ctx (commands.Context): The context object.
+            channel (discord.VoiceChannel): The desired voice channel.
+        """
+        if not ctx.guild:
+            return
+
+        logger.info(
+            "%s called command 'get_voice_channel_attendees' in %s.",
+            ctx.author.display_name,
+            ctx.guild.name,
+        )
+
+        await ctx.send(embed=du.get_people_embed(channel.members))
+        return
+
 
 async def setup(bot: commands.Bot) -> None:
     """Adds the cog to the bot."""
