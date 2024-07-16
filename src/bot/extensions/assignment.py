@@ -11,15 +11,15 @@ import dataproducer as dp
 import discord
 import settings as stg
 import utility.datahandler as dh
+import utility.dutils as du
 import utility.processor as prep
-from discord import Color, Embed
 from discord.ext import commands, tasks
 from settings import Server
 
 logger = logging.getLogger("assign")
 
 
-async def send_assignment_summary(
+async def send_assignment_summary_embed(
     ctx: commands.Context,
     found: int,
     not_found: int,
@@ -31,11 +31,7 @@ async def send_assignment_summary(
         found (int): The count of people found.
         not_found (int): The count of people not found.
     """
-    embed = Embed(
-        title="Role Assignment Summary",
-        timestamp=discord.utils.utcnow(),
-        color=Color.orange(),
-    )
+    embed = du.get_basic_embed(title="Role Assignment Summary")
 
     embed.add_field(name="People Found:", value=str(found))
     embed.add_field(name="People Not Found:", value=str(not_found))
@@ -209,7 +205,7 @@ class Assignment(commands.Cog):
         await ctx.send("*Finished Role Assignments.*")
 
         dh.write_assignment_report(people, assignment_group)
-        await send_assignment_summary(ctx, *dh.get_assignment_counts(people))
+        await send_assignment_summary_embed(ctx, *dh.get_assignment_counts(people))
 
         return
 

@@ -5,24 +5,15 @@ commands used to get information about guild members.
 """
 
 import logging
-from datetime import datetime
 
 import discord
 import settings as stg
 import utility.datahandler as dh
-from discord import Color, Embed, File
+import utility.dutils as du
+from discord import File
 from discord.ext import commands
-from pytz import timezone
 
 logger = logging.getLogger("commands")
-
-
-class DateTimeConverter:
-    """Converts a string to a datetime."""
-
-    async def convert(self, ctx: commands.Context, dt: str) -> datetime:  # noqa
-        """Returns datetime from the dt string."""
-        return datetime.strptime(dt, "%m/%d/%Y").astimezone(tz=timezone("EST"))
 
 
 class Information(commands.Cog):
@@ -59,11 +50,9 @@ class Information(commands.Cog):
             filename="marshmallow_icon.png",
         )
 
-        embed = Embed(
-            title="About Marshmallow:",
+        embed = du.get_basic_embed(
+            title="About Marshmallow",
             description="Automates administrative and managerial tasks on Princeton EBCAO discords.",  # noqa: E501
-            timestamp=discord.utils.utcnow(),
-            color=Color.orange(),
         )
 
         embed.set_author(
@@ -102,11 +91,7 @@ class Information(commands.Cog):
             ctx.guild.name,
         )
 
-        info_embed = Embed(
-            title="Member Information",
-            timestamp=discord.utils.utcnow(),
-            color=Color.orange(),
-        )
+        info_embed = du.get_basic_embed(title="Member Information")
 
         if member.joined_at:
             info_embed.add_field(
@@ -139,7 +124,7 @@ class Information(commands.Cog):
         ctx: commands.Context,
         channel: discord.TextChannel,
         *,
-        start: DateTimeConverter,
+        start: du.DateTimeConverter,
     ) -> None:
         """Maps people's daily message activity in channel from start date.
 
@@ -173,6 +158,30 @@ class Information(commands.Cog):
         dh.write_daily_message_report(sorted_record, channel.name)
 
         await ctx.send("Channel Activity Logged.")
+
+    @commands.hybrid_command()
+    @commands.guild_only()
+    @commands.has_any_role(*stg.get_admin_roles())
+    async def get_voice_channel_attendees(
+        self, ctx: commands.Context, channel: discord.VoiceChannel
+    ) -> None:
+        """Displays the current members in the specified voice channel.
+
+        Args:
+            ctx (commands.Context): The context object.
+            channel (discord.VoiceChannel): The desired voice channel.
+        """
+        if not ctx.guild:
+            return
+
+        logger.info(
+            "%s called command 'get_voice_channel_attendees' in %s.",
+            ctx.author.display_name,
+            ctx.guild.name,
+        )
+
+        await ctx.send(embed=du.get_people_embed(channel.members))
+        return
 
 
 async def setup(bot: commands.Bot) -> None:

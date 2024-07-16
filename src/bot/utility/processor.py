@@ -7,8 +7,10 @@ from collections.abc import Sequence
 import dataproducer as dp
 import discord
 import pandas as pd  # noqa: F401
-from discord import Color, Embed
+from discord import Embed
 from discord.ext import commands
+
+import utility.dutils as du
 
 logger = logging.getLogger("assign")
 
@@ -92,23 +94,16 @@ def __get_failed_assignments(assignment_group: str) -> list[str]:
 
 
 def __create_failed_assignments_embed(unmatched: list[str]) -> Embed:
-    """Returns failed assignments embed.
+    """Returns unmatched people embed.
 
     Args:
         unmatched (list[str]): The unmatched people.
 
     Returns:
-        str: message
+        Embed: message
     """
-    unmatched_people = "\n".join(unmatched)
-
-    embed = Embed(
-        title="Unmatched Person Report",
-        timestamp=discord.utils.utcnow(),
-        color=Color.orange(),
-    )
-
-    embed.add_field(name="People:", value=unmatched_people)
+    embed = du.get_basic_embed("Unmatched Person Report")
+    embed.add_field(name="People:", value="\n".join(unmatched))
 
     return embed
 
