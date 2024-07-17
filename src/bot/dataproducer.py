@@ -118,6 +118,24 @@ def get_welcome_messages() -> dict:
         return json.load(data)
 
 
+def get_failed_assignments(assignment_group: str) -> list[str]:
+    """Returns people of assignment_group who were not assigned their roles.
+
+    Args:
+        assignment_group (str): assignment report
+
+    Returns:
+        list[str]: failed assignments for assignment group
+    """
+    report = get_assignment_report(assignment_group)
+    report = report[report["found"] == False]  # noqa
+
+    unmatched = report["full_name"].tolist()
+    unmatched.sort()
+
+    return unmatched
+
+
 def main() -> None:
     """Unit Testing."""
     return
