@@ -2,6 +2,7 @@
 
 from datetime import datetime
 
+import dataproducer as dp
 import discord
 from discord import Color, Embed
 from discord.ext import commands
@@ -67,5 +68,22 @@ def get_assignment_summary_embed(
     embed.add_field(name="People Not Found:", value=str(not_found))
     if ctx.guild:
         embed.add_field(name="People on Server:", value=str(ctx.guild.member_count))
+
+    return embed
+
+
+def get_failed_assignments_embed(assignment_group: list[str]) -> Embed:
+    """Returns unmatched people embed.
+
+    Args:
+        assignment_group (str): The assignment group.
+
+    Returns:
+        Embed: The failed assignments embed.
+    """
+    embed = get_basic_embed("Unmatched Person Report")
+    embed.add_field(
+        name="People:", value="\n".join(dp.get_failed_assignments(assignment_group))
+    )
 
     return embed
