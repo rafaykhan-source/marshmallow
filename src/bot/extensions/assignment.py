@@ -209,7 +209,8 @@ class Assignment(commands.Cog):
             assignment_group,
             ctx.guild.name,
         )
-        await pr.send_failed_assignments(ctx, assignment_group)
+
+        await ctx.send(embed=du.get_failed_assignments_embed(assignment_group))
 
         return
 
