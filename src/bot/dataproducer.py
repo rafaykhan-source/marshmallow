@@ -11,7 +11,7 @@ import logging
 import pandas as pd
 from adt import Person
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("utility")
 
 
 def __create_person(row: list) -> Person:
@@ -50,15 +50,25 @@ def __load_data(csv_name: str) -> pd.DataFrame:
 
     return data
 
+
 def __create_affinity_person(row: list) -> dict:
-    return {"full_name": row[0],
-            "email":row[1],
-            "affinity_groups": row[2].split(","),
-            "alg_names":row[3].split(",")}
+    return {
+        "full_name": row[0],
+        "email": row[1],
+        "affinity_groups": row[2].split(","),
+        "alg_names": row[3].split(","),
+    }
+
 
 def get_affinity_people() -> list[dict]:
+    """Returns affinity group people.
+
+    Returns:
+        list[dict]: The affinity group people.
+    """
     data = __get_assignment_group_data("affinity")
     return list(map(__create_affinity_person, data.values.tolist()))
+
 
 def __get_assignment_group_data(assignment_group: str) -> pd.DataFrame:
     """Returns assignment group data for specified assignment group.

@@ -17,11 +17,11 @@ handlers:
     maxBytes: 524288 #.5MB
     backupCount: 3
     encoding: utf8
-  dpHandler:
+  utilityHandler:
     class: logging.handlers.RotatingFileHandler
     level: DEBUG
     formatter: default
-    filename: logs/dataproducer.log
+    filename: logs/utility.log
     maxBytes: 524288 #.5MB
     backupCount: 3
     encoding: utf8
@@ -50,9 +50,9 @@ loggers:
     level: DEBUG
     handlers: [marshHandler]
     propagate: no
-  dataproducer:
+  utility:
     level: DEBUG
-    handlers: [dpHandler]
+    handlers: [utilityHandler]
     propagate: no
   commands:
     level: DEBUG
