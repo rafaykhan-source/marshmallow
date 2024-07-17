@@ -10,7 +10,6 @@ import discord
 import settings as stg
 import utility.dmaps as dm
 import utility.processor as pr
-import utility.dmaps as dm
 from discord.ext import commands
 from settings import Server
 
@@ -173,6 +172,7 @@ class Auto(commands.Cog):
             for mem, aliases in member_alias_map.items():
                 if pr.is_name_match(aliases, alg_names):
                     member = mem
+                    break
 
             channels = []
             groups = person["affinity_groups"]
@@ -182,7 +182,6 @@ class Auto(commands.Cog):
                 if group in voice_channels:
                     channels.append(voice_channels[group])
 
-            print([ch.name for ch in channels])
             for channel in channels:
                 if not channel:
                     continue
@@ -200,7 +199,8 @@ class Auto(commands.Cog):
                     overwrite.stream = True
                 if member:
                     await channel.set_permissions(member, overwrite=overwrite)
-                    print(channel.name, member.display_name)
+                    logger.info("Added %s to %s", member.display_name, channel)
+                    await ctx.send(f"Added {member.display_name} to {channel}")
                 else:
                     missing.append(person["full_name"])
 
