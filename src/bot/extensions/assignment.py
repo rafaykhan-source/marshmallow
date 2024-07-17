@@ -12,36 +12,11 @@ import discord
 import settings as stg
 import utility.datahandler as dh
 import utility.dutils as du
-import utility.processor as prep
+import utility.processor as pr
 from discord.ext import commands, tasks
 from settings import Server
 
 logger = logging.getLogger("assign")
-
-
-async def send_assignment_summary_embed(
-    ctx: commands.Context,
-    found: int,
-    not_found: int,
-) -> None:
-    """Sends assignment summary to context channel based on assignment stats.
-
-    Args:
-        ctx (commands.Context): The command context.
-        found (int): The count of people found.
-        not_found (int): The count of people not found.
-    """
-    embed = du.get_basic_embed(title="Role Assignment Summary")
-
-    embed.add_field(name="People Found:", value=str(found))
-    embed.add_field(name="People Not Found:", value=str(not_found))
-    if ctx.guild:
-        embed.add_field(name="People on Server:", value=str(ctx.guild.member_count))
-
-    await ctx.send(embed=embed)
-    logger.info("Sent Role Assignment Summary.")
-
-    return
 
 
 async def is_valid_assignment(ctx: commands.Context, assignment_group: str) -> bool:
@@ -188,7 +163,7 @@ class Assignment(commands.Cog):
 
         self.cache_assignment(ctx, assignment_group)
         people = dp.get_people(assignment_group)
-        member_alias_map = prep.create_member_alias_map(ctx.guild.members)
+        member_alias_map = pr.create_member_alias_map(ctx.guild.members)
 
         for person in people:
             person.set_guild_member(member_alias_map)
@@ -205,7 +180,8 @@ class Assignment(commands.Cog):
         await ctx.send("*Finished Role Assignments.*")
 
         dh.write_assignment_report(people, assignment_group)
-        await send_assignment_summary_embed(ctx, *dh.get_assignment_counts(people))
+        embed = du.get_assignment_summary_embed(ctx, *dh.get_assignment_counts(people))
+        await ctx.send(embed=embed)
 
         return
 
@@ -233,7 +209,8 @@ class Assignment(commands.Cog):
             assignment_group,
             ctx.guild.name,
         )
-        await prep.send_failed_assignments(ctx, assignment_group)
+
+        await ctx.send(embed=du.get_failed_assignments_embed(assignment_group))
 
         return
 
