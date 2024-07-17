@@ -10,6 +10,7 @@ import discord
 import settings as stg
 import utility.dmaps as dm
 import utility.processor as pr
+import utility.dmaps as dm
 from discord.ext import commands
 from settings import Server
 
@@ -37,8 +38,8 @@ class Auto(commands.Cog):
             "Water Tribe",
         }
         "The nation names for assignment."
-        self.group_roles: list[discord.Role | None] = []
-        "The group guild roles."
+        self.group_map: dict[str, discord.Role | None] = {}
+        "The mapping of groups to guild roles."
         self.group_to_nation: dict[str, str] = {
             "Zee Group 0": "Metal Clan",
             "Zee Group 1": "Metal Clan",
@@ -60,7 +61,7 @@ class Auto(commands.Cog):
             "Zee Group 17": "Water Tribe",
         }
         "The mapping between group names and nation names for assignment."
-        self.nation_to_role: dict[str, discord.Role | None] = {}
+        self.nation_map: dict[str, discord.Role | None] = {}
         "The mapping of nations to guild roles."
         return
 
@@ -92,32 +93,27 @@ class Auto(commands.Cog):
             await ctx.send("Wrong Guild.")
             return
 
-        if not self.nation_to_role:
-            self.nation_to_role = {
-                nation: discord.utils.get(guild.roles, name=nation)
-                for nation in self.nations
-            }
+        if not self.nation_map:
+            self.nation_map = await dm.get_role_map(ctx, list(self.nations))
 
-        if not self.group_roles:
-            self.group_roles = [
-                discord.utils.get(guild.roles, name=group)
-                for group in self.group_to_nation
-            ]
+        if not self.group_map:
+            self.group_map = await dm.get_role_map(
+                ctx, list(self.group_to_nation.keys())
+            )
 
         logger.info("Starting Nation Role Assignments.")
         await ctx.send("*Starting Nation Role Assignments.*")
 
-        for group_role in self.group_roles:
+        for group_name, group_role in self.group_map.items():
             if not group_role:
                 continue
 
-            nation_name = self.group_to_nation[group_role.name]
+            nation_name = self.group_to_nation[group_name]
+            nation_role = self.nation_map[nation_name]
+            if not nation_role:
+                continue
 
             for member in group_role.members:
-                nation_role = self.nation_to_role[nation_name]
-                if not nation_role:
-                    continue
-
                 if nation_role in member.roles:
                     logger.info("%s already assigned %s.", member.name, nation_name)
                     continue
