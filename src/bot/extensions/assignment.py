@@ -7,10 +7,10 @@ storing assignment result information.
 import asyncio
 import logging
 
-import dataproducer as dp
 import discord
 import settings as stg
 import utility.datahandler as dh
+import utility.dataproducer as dp
 import utility.dutils as du
 import utility.processor as pr
 from discord.ext import commands, tasks
