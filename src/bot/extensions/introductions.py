@@ -9,9 +9,9 @@ nickname to their first and last name.
 import logging
 import sys
 
-import dataproducer as dp
 import discord
 import settings as stg
+import utility.dataproducer as dp
 from discord.ext import commands
 from settings import Server
 
