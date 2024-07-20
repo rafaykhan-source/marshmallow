@@ -44,7 +44,7 @@ def get_people_embed(members: list[discord.Member]) -> None:
     """
     embed = get_basic_embed(title="People")
 
-    people = [member.display_name for member in members]
+    people = sorted([member.display_name for member in members])
     embed.add_field(name="Display Names", value="\n".join(people))
 
     return embed
