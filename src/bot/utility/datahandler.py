@@ -2,12 +2,9 @@
 
 import datetime
 import logging
-import sys
 
 import pandas as pd
 from adt import Person
-
-sys.path.append("..")
 
 logger = logging.getLogger("marshmallow")
 

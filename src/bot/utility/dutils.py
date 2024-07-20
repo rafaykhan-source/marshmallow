@@ -2,11 +2,12 @@
 
 from datetime import datetime
 
-import dataproducer as dp
 import discord
 from discord import Color, Embed
 from discord.ext import commands
 from pytz import timezone
+
+from . import dataproducer as dp
 
 
 class DateTimeConverter:
