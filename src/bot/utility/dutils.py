@@ -1,11 +1,10 @@
 """The dutils module contains general discord related utility functions."""
 
-from datetime import datetime
+import datetime as dt
 
 import discord
 from discord import Color, Embed
 from discord.ext import commands
-from pytz import timezone
 
 from . import dataproducer as dp
 
@@ -13,9 +12,9 @@ from . import dataproducer as dp
 class DateTimeConverter:
     """Converts a string to a datetime."""
 
-    async def convert(self, ctx: commands.Context, dt: str) -> datetime:  # noqa
+    async def convert(self, ctx: commands.Context, s: str) -> dt.datetime:  # noqa
         """Returns datetime from the dt string."""
-        return datetime.strptime(dt, "%m/%d/%Y").astimezone(tz=timezone("EST"))
+        return dt.datetime.strptime(s, "%m/%d/%y %I:%M%p").astimezone(dt.timezone.utc)
 
 
 def get_basic_embed(title: str | None = None, description: str | None = None) -> Embed:
