@@ -15,8 +15,6 @@ def __configure_logging() -> None:
     config = stg.get_logging_config()
     logging.config.dictConfig(config)
 
-    return
-
 
 async def main() -> None:
     """Runs Marshmallow."""
@@ -26,13 +24,10 @@ async def main() -> None:
     marsh = MarshmallowBotClient()
 
     logger.info("Retrieving Token.")
-    TOKEN = stg.get_token()  # noqa
 
     async with marsh as bot:
         logger.info("Starting Marshmallow.")
-        await bot.start(TOKEN)
-
-    return
+        await bot.start(stg.get_token())
 
 
 if __name__ == "__main__":

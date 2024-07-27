@@ -37,8 +37,6 @@ class MarshmallowBotClient(commands.Bot):
             activity=stg.get_random_discord_activity(),
         )
 
-        return
-
     async def setup_hook(self) -> None:
         """Loads bot extensions."""
         cog_names = stg.get_cog_names()
@@ -54,7 +52,6 @@ class MarshmallowBotClient(commands.Bot):
         if self.user:
             print(f"Logged in as {self.user} (ID: {self.user.id})")
             logger.info("Logged in as %s (ID: %s)", self.user, self.user.id)
-        return
 
 
 def main() -> None:

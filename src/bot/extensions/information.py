@@ -30,7 +30,6 @@ class Information(commands.Cog):
     def __init__(self, bot: commands.Bot) -> None:
         """Instantiates the Information Cog."""
         self.bot = bot
-        return
 
     @commands.hybrid_command()
     @commands.guild_only()
@@ -163,7 +162,9 @@ class Information(commands.Cog):
     @commands.guild_only()
     @commands.has_any_role(*stg.get_admin_roles())
     async def get_voice_channel_attendees(
-        self, ctx: commands.Context, channel: discord.VoiceChannel
+        self,
+        ctx: commands.Context,
+        channel: discord.VoiceChannel,
     ) -> None:
         """Displays the current members in the specified voice channel.
 
@@ -187,4 +188,3 @@ class Information(commands.Cog):
 async def setup(bot: commands.Bot) -> None:
     """Adds the cog to the bot."""
     await bot.add_cog(Information(bot))
-    return

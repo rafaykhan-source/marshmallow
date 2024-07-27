@@ -1,5 +1,6 @@
 """The datahandler module is responsible for writing data and storing data."""
 
+import csv
 import datetime
 import logging
 
@@ -39,7 +40,19 @@ def write_assignment_report(people: list[Person], csv_name: str) -> None:
     pd.DataFrame(reports).to_csv(path, index=False)
 
     logger.info("Wrote '%s' Assignment Report.", csv_name)
-    return
+
+
+def write_message_counts(message_counts: dict, csv_name: str) -> None:
+    """Writes the message counts to a csv file.
+
+    Args:
+        message_counts (dict): The message counts.
+        csv_name (str): The name of the csv.
+    """
+    with open(f"messages/{csv_name}.csv", "w") as f:
+        w = csv.writer(f)
+        w.writerow(("name", "username", "count"))
+        w.writerows(message_counts.items())
 
 
 def write_daily_message_report(metrics: dict, name: str) -> None:
@@ -58,7 +71,6 @@ def write_daily_message_report(metrics: dict, name: str) -> None:
     df.to_csv(path, index=False)
 
     logger.info("Wrote '%s' Message Report.", name)
-    return
 
 
 def main() -> None:

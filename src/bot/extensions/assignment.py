@@ -19,7 +19,7 @@ from settings import Server
 logger = logging.getLogger("assign")
 
 
-async def is_valid_assignment(ctx: commands.Context, assignment_group: str) -> bool:
+async def is_valid_assignment(ctx: commands.Context, assignment_group: str) -> bool:  # noqa
     """Returns validity of assign command call.
 
     Checks guild context and relevant constraints.
@@ -88,7 +88,6 @@ class Assignment(commands.Cog):
         "The cog's lock."
         self.assign_cache: dict[str, commands.Context] = {}
         "The cog's cache for automatic role assignments."
-        return
 
     @tasks.loop(minutes=15.0)
     async def assigner(self) -> None:
@@ -101,12 +100,10 @@ class Assignment(commands.Cog):
         for assignment_group, ctx in self.assign_cache.items():
             async with self.lock:
                 await self.assign(ctx, assignment_group)
-        return
 
     def cache_assignment(self, ctx: commands.Context, assignment_group: str) -> None:
         """Caches the assignment task."""
         self.assign_cache[assignment_group] = ctx
-        return
 
     @commands.hybrid_command()
     @commands.guild_only()
@@ -116,7 +113,6 @@ class Assignment(commands.Cog):
         """Starts the automatic role assignment protocol."""
         await ctx.send("Started Assigner Protocol.")
         self.assigner.start()
-        return
 
     @commands.hybrid_command()
     @commands.guild_only()
@@ -126,7 +122,6 @@ class Assignment(commands.Cog):
         """Stops the automatic role assignment protocol."""
         self.assigner.cancel()
         await ctx.send("Stopped Assigner Protocol.")
-        return
 
     @commands.hybrid_command()
     @commands.guild_only()
@@ -218,4 +213,3 @@ class Assignment(commands.Cog):
 async def setup(bot: commands.Bot) -> None:
     """Adds the cog to the bot."""
     await bot.add_cog(Assignment(bot))
-    return

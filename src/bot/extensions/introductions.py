@@ -37,7 +37,6 @@ class Introductions(commands.Cog):
         "The cog's associated bot client."
         self.welcomes: dict = dp.get_welcome_messages()
         "The program to welcome message mapping."
-        return
 
     @commands.Cog.listener()
     async def on_member_join(self, member: discord.Member) -> None:
@@ -69,14 +68,12 @@ class Introductions(commands.Cog):
                     member.guild.name,
                 )
                 sys.exit(1)
-                return
 
         logger.info(
             "Sent welcome message to %s for joining '%s'.",
             member.display_name,
             member.guild.name,
         )
-        return
 
     @commands.command(hidden=True)
     @commands.guild_only()
@@ -97,4 +94,3 @@ class Introductions(commands.Cog):
 async def setup(bot: commands.Bot) -> None:
     """Adds the cog to the bot."""
     await bot.add_cog(Introductions(bot))
-    return

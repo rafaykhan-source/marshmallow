@@ -45,7 +45,7 @@ def __load_data(csv_name: str) -> pd.DataFrame:
         data = pd.read_csv(csv_name)
         logger.info("Loaded Data From: %s", csv_name)
     except FileNotFoundError:
-        logger.error("File Not Found: %s", csv_name)
+        logger.exception("File Not Found: %s", csv_name)
         data = pd.DataFrame()
 
     return data

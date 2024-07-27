@@ -34,7 +34,6 @@ class Development(commands.Cog):
         "The cog's associated bot client."
         self.cog_names: set[str] = stg.get_cog_names()
         "The cogs of the bot."
-        return
 
     @commands.hybrid_command()
     @commands.guild_only()
@@ -170,4 +169,3 @@ class Development(commands.Cog):
 async def setup(bot: commands.Bot) -> None:
     """Adds the cog to the bot."""
     await bot.add_cog(Development(bot))
-    return

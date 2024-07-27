@@ -62,7 +62,6 @@ class Auto(commands.Cog):
         "The mapping between group names and nation names for assignment."
         self.nation_map: dict[str, discord.Role | None] = {}
         "The mapping of nations to guild roles."
-        return
 
     @commands.hybrid_command()
     @commands.guild_only()
@@ -97,7 +96,8 @@ class Auto(commands.Cog):
 
         if not self.group_map:
             self.group_map = await dm.get_role_map(
-                ctx, list(self.group_to_nation.keys())
+                ctx,
+                list(self.group_to_nation.keys()),
             )
 
         logger.info("Starting Nation Role Assignments.")
@@ -130,7 +130,7 @@ class Auto(commands.Cog):
     @commands.guild_only()
     @commands.has_any_role(*stg.get_admin_roles())
     @commands.has_permissions(manage_roles=True)
-    async def assign_affinity(self, ctx: commands.Context) -> None:  # noqa: C901
+    async def assign_affinity(self, ctx: commands.Context) -> None:  # noqa
         """Assigns affinity groups.
 
         Args:
@@ -208,4 +208,3 @@ class Auto(commands.Cog):
 async def setup(bot: commands.Bot) -> None:
     """Adds the cog to the bot."""
     await bot.add_cog(Auto(bot))
-    return

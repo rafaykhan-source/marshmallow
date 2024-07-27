@@ -84,7 +84,8 @@ def get_failed_assignments_embed(assignment_group: list[str]) -> Embed:
     """
     embed = get_basic_embed("Unmatched Person Report")
     embed.add_field(
-        name="People:", value="\n".join(dp.get_failed_assignments(assignment_group))
+        name="People:",
+        value="\n".join(dp.get_failed_assignments(assignment_group)),
     )
 
     return embed

@@ -63,8 +63,6 @@ class Person:
         self.guild_roles: list[discord.Role] | None = None
         "Person's Corresponding Designated Guild Roles. Instance Variable."
 
-        return
-
     def set_guild_member(
         self,
         members_to_aliases: dict[discord.Member, list[str]],

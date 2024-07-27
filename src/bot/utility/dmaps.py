@@ -9,7 +9,8 @@ logger = logging.getLogger("utility")
 
 
 async def get_channel_map(
-    ctx: commands.Context, channels: list[str]
+    ctx: commands.Context,
+    channels: list[str],
 ) -> dict[str, discord.abc.GuildChannel]:
     """Returns a map between channel names and their corresponding discord object.
 
@@ -23,7 +24,8 @@ async def get_channel_map(
     channel_map = {}
     for channel in channels:
         guild_channel = await discord.ext.commands.GuildChannelConverter().convert(
-            ctx, channel
+            ctx,
+            channel,
         )
         if not guild_channel:
             logger.warning("No associated guild channel with %s.", channel)
@@ -33,7 +35,8 @@ async def get_channel_map(
 
 
 async def get_role_map(
-    ctx: commands.Context, roles: list[str]
+    ctx: commands.Context,
+    roles: list[str],
 ) -> dict[str, discord.Role]:
     """Returns a map between role names and their corresponding discord object.
 
