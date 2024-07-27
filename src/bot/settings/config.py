@@ -18,6 +18,19 @@ from dotenv import load_dotenv
 logger = logging.getLogger("marshmallow")
 
 
+class TokenNotFoundError(Exception):
+    """The exception for a missing token."""
+
+    def __init__(self) -> None:
+        """Instantiates a missing token exception."""
+        super().__init__("Token Not Found.")
+
+
+def __check_token(token: str | None) -> None:
+    if not token:
+        raise TokenNotFoundError()
+
+
 def get_token() -> str:
     """Returns bot token.
 
@@ -31,12 +44,10 @@ def get_token() -> str:
 
     try:
         token = os.getenv("DISCORD_TOKEN")
-        if not token:
-            msg = "Token Not Found."
-            raise ValueError(msg)
+        __check_token(token)
 
-    except ValueError as ex:
-        logger.error(ex)
+    except ValueError:
+        logger.exception("Exception: Token Not Found.")
         sys.exit(1)
 
     return token
@@ -88,8 +99,8 @@ def get_logging_config() -> dict:
     ) as stream:
         try:
             config = yaml.safe_load(stream)
-        except yaml.YAMLError as ex:
-            logger.error("YAML Error: %s", ex)
+        except yaml.YAMLError:
+            logger.exception("YAML Error")
 
     return config
 
