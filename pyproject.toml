@@ -13,7 +13,7 @@ maintainers = [{ name = "Rafay K" }]
 description = "Automates administrative and managerial tasks on Princeton EBCAO Discords."
 readme = "README.md"
 requires-python = ">=3.10"
-dependencies = ["discord.py", "python-dotenv", "pandas", "pyyaml", "pytz"]
+dependencies = ["discord.py", "python-dotenv", "pandas", "pyyaml"]
 
 [project.optional-dependencies]
 development = ["ruff", "mypy", "pre-commit"]
@@ -23,7 +23,6 @@ select = [
     "F",   # pyflakes
     "E",   # pycodestyle
     "W",   # pycodestyle
-    "C90", # mccabe
     "I",   # isort
     "N",   # pep8-naming
     "D",   # pydocstyle
@@ -37,15 +36,28 @@ select = [
     "C4",  # flake8-comprehensions
     "DTZ", # flake8-datetimez
     "EM",  # flake8-errmsg
+    "ISC", # flake8-implicit-str-concat
     "EXE", # flake8-executable
     "ICN", # flake8-import-conventions
+    "LOG", # flake8-logging
     "G",   # flake8-logging-format
+    "PIE", # flake8-pie
     "Q",   # flake8-quotes
     "RET", # flake8-return
+    "SLF", # flake8-self
+    "SLOT", # flake8-slots
     "SIM", # flake8-simplify
+    "TCH", # flake8-type-checking
     "ARG", # flake8-unused-arguments
+    "PL", # pylint
+    "TRY", # tryceratops
+    "PERF", # Perflint
+    "RUF", # Ruff-specific rules"ARG"
 ]
-ignore = ["ANN101", "COM819", "COM812"]
+# Common Ignores
+# Ignore 'self' typehint
+ignore = ["ANN101"]
+# ignore = ["ANN101", "COM819", "COM812"]
 include = ["*.py"]
 
 [tool.ruff.per-file-ignores]
