@@ -5,3 +5,5 @@ typically associated with a person in an object.
 """
 
 from .person import Person
+
+__all__ = ["Person"]
