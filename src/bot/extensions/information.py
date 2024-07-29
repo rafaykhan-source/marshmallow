@@ -144,16 +144,19 @@ class Information(commands.Cog):
 
         messages = channel.history(limit=None, after=start, before=end)
 
-        record: dict[str, int] = {}
+        record = {}
         await ctx.send(f"Checking Message History of {channel.name}.")
         async for msg in messages:
-            person = f"{msg.author.display_name} ({msg.author.name})"
+            person = (msg.author.display_name, msg.author.name)
             if person not in record:
                 record[person] = 0
             record[person] += 1
         await ctx.send(f"Finished Checking Message History {channel.name}.")
 
-        dh.write_message_counts(record, f"{channel.name}-{start}")
+        dh.write_message_counts(
+            record,
+            f"{channel.name[3:]}-{end.strftime('%m-%d-%y')}",
+        )
 
         await ctx.send("Channel Activity Logged.")
 
@@ -186,7 +189,7 @@ class Information(commands.Cog):
 
         messages = channel.history(limit=None, after=start, before=end)
 
-        record: dict[str, set[str]] = {}
+        record = {}
         await ctx.send(f"Checking Message History of {channel.name}.")
         async for msg in messages:
             person = f"{msg.author.display_name} ({msg.author.name})"

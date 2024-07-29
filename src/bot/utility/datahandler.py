@@ -52,7 +52,7 @@ def write_message_counts(message_counts: dict, csv_name: str) -> None:
     with open(f"messages/{csv_name}.csv", "w") as f:
         w = csv.writer(f)
         w.writerow(("name", "username", "count"))
-        w.writerows(message_counts.items())
+        w.writerows([(*person, count) for person, count in message_counts.items()])
 
 
 def write_daily_message_report(metrics: dict, name: str) -> None:
