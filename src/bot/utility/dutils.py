@@ -35,7 +35,7 @@ def get_basic_embed(title: str | None = None, description: str | None = None) ->
     )
 
 
-def get_people_embed(members: list[discord.Member]) -> None:
+def get_people_embed(members: list[discord.Member]) -> Embed:
     """Returns an embed containing names of provided members.
 
     Args:
@@ -72,7 +72,7 @@ def get_assignment_summary_embed(
     return embed
 
 
-def get_failed_assignments_embed(assignment_group: list[str]) -> Embed:
+def get_failed_assignments_embed(assignment_group: str) -> Embed:
     """Returns unmatched people embed.
 
     Args:

@@ -37,7 +37,7 @@ async def get_channel_map(
 async def get_role_map(
     ctx: commands.Context,
     roles: list[str],
-) -> dict[str, discord.Role]:
+) -> dict[str, discord.Role | None]:
     """Returns a map between role names and their corresponding discord object.
 
     Args:
@@ -47,7 +47,7 @@ async def get_role_map(
     Returns:
         dict[str, discord.GuildChannel]: The role object mapping.
     """
-    role_map = {}
+    role_map: dict[str, discord.Role | None] = {}
     for role in roles:
         guild_role = await discord.ext.commands.RoleConverter().convert(ctx, role)
         if not guild_role:

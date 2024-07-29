@@ -26,9 +26,10 @@ class TokenNotFoundError(Exception):
         super().__init__("Token Not Found.")
 
 
-def __check_token(token: str | None) -> None:
+def __check_token(token: str | None) -> str:
     if not token:
         raise TokenNotFoundError()
+    return token
 
 
 def get_token() -> str:
@@ -44,7 +45,7 @@ def get_token() -> str:
 
     try:
         token = os.getenv("DISCORD_TOKEN")
-        __check_token(token)
+        token = __check_token(token)
 
     except ValueError:
         logger.exception("Exception: Token Not Found.")
