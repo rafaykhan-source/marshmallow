@@ -36,7 +36,6 @@ async def log_send(ctx: commands.Context, msg: str) -> None:
     """
     logger.info(msg)
     await ctx.send(msg)
-    return
 
 
 class Management(commands.Cog):
@@ -57,7 +56,6 @@ class Management(commands.Cog):
         """Instantiates the Management Cog."""
         self.bot: commands.Bot = bot
         "The cog's associated bot client."
-        return
 
     @commands.hybrid_command()
     @commands.guild_only()
@@ -164,7 +162,7 @@ class Management(commands.Cog):
     @commands.guild_only()
     @commands.has_any_role(*stg.get_admin_roles())
     @commands.has_permissions(manage_channels=True)
-    async def clone_channels(
+    async def clone_channels(  # noqa
         self,
         ctx: commands.Context,
         channel: discord.TextChannel | discord.VoiceChannel,
@@ -246,7 +244,7 @@ class Management(commands.Cog):
     @commands.guild_only()
     @commands.has_any_role(*stg.get_admin_roles())
     @commands.has_permissions(manage_roles=True)
-    async def clone_roles(
+    async def clone_roles(  # noqa
         self,
         ctx: commands.Context,
         role: discord.Role,
@@ -296,4 +294,3 @@ class Management(commands.Cog):
 async def setup(bot: commands.Bot) -> None:
     """Adds cog to the bot."""
     await bot.add_cog(Management(bot))
-    return

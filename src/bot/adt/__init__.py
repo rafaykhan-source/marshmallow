@@ -3,4 +3,7 @@
 It contains the Person module, responsible for wrapping information
 typically associated with a person in an object.
 """
-from adt.person import Person
+
+from .person import Person
+
+__all__ = ["Person"]

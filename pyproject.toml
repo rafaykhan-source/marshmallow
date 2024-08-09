@@ -7,26 +7,24 @@ egg_base = "build"
 
 [project]
 name = "marshmallow"
-version = "0.0.11"
+version = "0.0.2"
 authors = [{ name = "Rafay K" }]
 maintainers = [{ name = "Rafay K" }]
 description = "Automates administrative and managerial tasks on Princeton EBCAO Discords."
 readme = "README.md"
 requires-python = ">=3.10"
-dependencies = ["discord.py", "python-dotenv", "pandas", "pyyaml", "pytz"]
+dependencies = ["discord.py", "python-dotenv", "pandas", "pyyaml"]
 
 [project.optional-dependencies]
-development = ["black", "ruff", "mypy", "pre-commit"]
-
+development = ["ruff", "mypy", "pre-commit"]
 
 [tool.ruff]
-# Adjust line-length to match black formatter
-line-length = 88
+
+[tool.ruff.lint]
 select = [
     "F",   # pyflakes
     "E",   # pycodestyle
     "W",   # pycodestyle
-    "C90", # mccabe
     "I",   # isort
     "N",   # pep8-naming
     "D",   # pydocstyle
@@ -40,19 +38,25 @@ select = [
     "C4",  # flake8-comprehensions
     "DTZ", # flake8-datetimez
     "EM",  # flake8-errmsg
+    "ISC", # flake8-implicit-str-concat
     "EXE", # flake8-executable
     "ICN", # flake8-import-conventions
+    "LOG", # flake8-logging
     "G",   # flake8-logging-format
+    "PIE", # flake8-pie
     "Q",   # flake8-quotes
     "RET", # flake8-return
+    "SLF", # flake8-self
+    "SLOT", # flake8-slots
     "SIM", # flake8-simplify
+    "TCH", # flake8-type-checking
     "ARG", # flake8-unused-arguments
+    "PL", # pylint
+    "TRY", # tryceratops
+    "PERF", # Perflint
+    "RUF", # Ruff-specific rules
 ]
-include = ["*.py"]
-ignore = ["ANN101", "COM819"]
+ignore = ["ANN101"]
 
-[tool.ruff.pydocstyle]
+[tool.ruff.lint.pydocstyle]
 convention = "google"
-
-[tool.ruff.per-file-ignores]
-"__init__.py" = ["F401"]

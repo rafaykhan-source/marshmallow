@@ -11,7 +11,7 @@ import logging
 import pandas as pd
 from adt import Person
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("utility")
 
 
 def __create_person(row: list) -> Person:
@@ -45,10 +45,29 @@ def __load_data(csv_name: str) -> pd.DataFrame:
         data = pd.read_csv(csv_name)
         logger.info("Loaded Data From: %s", csv_name)
     except FileNotFoundError:
-        logger.error("File Not Found: %s", csv_name)
+        logger.exception("File Not Found: %s", csv_name)
         data = pd.DataFrame()
 
     return data
+
+
+def __create_affinity_person(row: list) -> dict:
+    return {
+        "full_name": row[0],
+        "email": row[1],
+        "affinity_groups": row[2].split(","),
+        "alg_names": row[3].split(","),
+    }
+
+
+def get_affinity_people() -> list[dict]:
+    """Returns affinity group people.
+
+    Returns:
+        list[dict]: The affinity group people.
+    """
+    data = __get_assignment_group_data("affinity")
+    return list(map(__create_affinity_person, data.values.tolist()))
 
 
 def __get_assignment_group_data(assignment_group: str) -> pd.DataFrame:
@@ -97,6 +116,24 @@ def get_welcome_messages() -> dict:
         encoding="UTF-8",
     ) as data:
         return json.load(data)
+
+
+def get_failed_assignments(assignment_group: str) -> list[str]:
+    """Returns people of assignment_group who were not assigned their roles.
+
+    Args:
+        assignment_group (str): assignment report
+
+    Returns:
+        list[str]: failed assignments for assignment group
+    """
+    report = get_assignment_report(assignment_group)
+    report = report[report["found"] == False]  # noqa
+
+    unmatched = report["full_name"].tolist()
+    unmatched.sort()
+
+    return unmatched
 
 
 def main() -> None:

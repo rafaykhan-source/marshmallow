@@ -4,13 +4,30 @@ import logging
 import re
 from collections.abc import Sequence
 
-import dataproducer as dp
 import discord
 import pandas as pd  # noqa: F401
-from discord import Color, Embed
-from discord.ext import commands
 
 logger = logging.getLogger("assign")
+
+
+def is_name_match(aliases: list[str], alg_names: list[str]) -> bool:
+    """Returns whether there is a match in aliases and alg_names.
+
+    Note that a "match" is really a substring match of alg_name in alias.
+
+    Args:
+        aliases (list[str]): Cleaned aliases of an individual (from discord).
+        alg_names (list[str]): Cleaned names of an individual (from spreadsheet).
+
+    Returns:
+        bool: Presence of a Name Match.
+    """
+    for alg_name in alg_names:
+        for alias in aliases:
+            if alg_name in alias:
+                return True
+
+    return False
 
 
 def __clean_name(name: str) -> str:
@@ -71,60 +88,6 @@ def create_member_alias_map(
         dict: Mapping of members to aliases.
     """
     return {member: __get_member_aliases(member) for member in members}
-
-
-def __get_failed_assignments(assignment_group: str) -> list[str]:
-    """Returns people of assignment_group who were not assigned their roles.
-
-    Args:
-        assignment_group (str): assignment report
-
-    Returns:
-        list[str]: failed assignments for assignment group
-    """
-    report = dp.get_assignment_report(assignment_group)
-    report = report[report["found"] == False]  # noqa
-
-    unmatched = report["full_name"].tolist()
-    unmatched.sort()
-
-    return unmatched
-
-
-def __create_failed_assignments_embed(unmatched: list[str]) -> Embed:
-    """Returns failed assignments embed.
-
-    Args:
-        unmatched (list[str]): The unmatched people.
-
-    Returns:
-        str: message
-    """
-    unmatched_people = "\n".join(unmatched)
-
-    embed = Embed(
-        title="Unmatched Person Report",
-        timestamp=discord.utils.utcnow(),
-        color=Color.orange(),
-    )
-
-    embed.add_field(name="People:", value=unmatched_people)
-
-    return embed
-
-
-async def send_failed_assignments(ctx: commands.Context, assignment_group: str) -> None:
-    """Reports Failed Assignments for specified assignment group.
-
-    Args:
-        ctx (commands.Context): command calling information
-        assignment_group (str): group assigned roles
-    """
-    unmatched = __get_failed_assignments(assignment_group)
-    embed = __create_failed_assignments_embed(unmatched)
-    await ctx.send(embed=embed)
-
-    return
 
 
 def main() -> None:

@@ -22,7 +22,6 @@ class Shenanigans(commands.Cog):
         """Instantiates the Shenanigans Cog."""
         self.bot: commands.Bot = bot
         "The cog's associated bot client."
-        return
 
     @commands.hybrid_command()
     @commands.guild_only()
@@ -50,4 +49,3 @@ class Shenanigans(commands.Cog):
 async def setup(bot: commands.Bot) -> None:
     """Adds cog to the bot."""
     await bot.add_cog(Shenanigans(bot))
-    return

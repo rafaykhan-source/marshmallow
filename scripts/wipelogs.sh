@@ -1,1 +1,0 @@
-rm -f ~/Projects/marshmallow/logs/*.log
