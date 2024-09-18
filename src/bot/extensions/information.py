@@ -146,8 +146,8 @@ class Information(commands.Cog):
 
         record = {}
         await ctx.send(f"Checking Message History of {channel.name}.")
-        async for msg in messages:
-            person = (msg.author.display_name, msg.author.name)
+        async for m in messages:
+            person = (m.author.display_name, m.author.name)
             if person not in record:
                 record[person] = 0
             record[person] += 1
@@ -191,9 +191,9 @@ class Information(commands.Cog):
 
         record = {}
         await ctx.send(f"Checking Message History of {channel.name}.")
-        async for msg in messages:
-            person = f"{msg.author.display_name} ({msg.author.name})"
-            msg_date = msg.created_at.strftime("%m/%d/%Y")
+        async for m in messages:
+            person = f"{m.author.display_name} ({m.author.name})"
+            msg_date = m.created_at.strftime("%m/%d/%Y")
             if person not in record:
                 record[person] = set()
             record[person].add(msg_date)

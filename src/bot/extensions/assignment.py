@@ -97,9 +97,9 @@ class Assignment(commands.Cog):
             ctx (commands.Context): The context object for automatic role assignment.
             assignment_group (str): The desired assignment group.
         """
-        for assignment_group, ctx in self.assign_cache.items():
+        for group, ctx in self.assign_cache.items():
             async with self.lock:
-                await self.assign(ctx, assignment_group)
+                await self.assign(ctx, group)
 
     def cache_assignment(self, ctx: commands.Context, assignment_group: str) -> None:
         """Caches the assignment task."""

@@ -112,14 +112,14 @@ class Auto(commands.Cog):
             if not nation_role:
                 continue
 
-            for member in group_role.members:
-                if nation_role in member.roles:
-                    logger.info("%s already assigned %s.", member.name, nation_name)
+            for m in group_role.members:
+                if nation_role in m.roles:
+                    logger.info("%s already assigned %s.", m.name, nation_name)
                     continue
 
-                await member.add_roles(nation_role)
-                logger.info("%s was assigned %s.", member.name, nation_name)
-                await ctx.send(f"{member.display_name} was assigned {nation_name}.")
+                await m.add_roles(nation_role)
+                logger.info("%s was assigned %s.", m.name, nation_name)
+                await ctx.send(f"{m.display_name} was assigned {nation_name}.")
 
         logger.info("Finished Nation Role Assignments.")
         await ctx.send("*Finished Nation Role Assignments.*")

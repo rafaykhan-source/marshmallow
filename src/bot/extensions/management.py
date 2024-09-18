@@ -80,10 +80,10 @@ class Management(commands.Cog):
         channels = ctx.guild.channels
 
         await log_send(ctx, f"Deleting channels with base name: *{base_name}*")
-        for channel in channels:
-            if base_name in channel.name:
-                await channel.delete()
-                await log_send(ctx, f"Deleted Channel: *{channel.name}*")
+        for ch in channels:
+            if base_name in ch.name:
+                await ch.delete()
+                await log_send(ctx, f"Deleted Channel: *{ch.name}*")
 
         await log_send(ctx, f"Deleted channels with base name: *{base_name}*")
 
@@ -120,9 +120,9 @@ class Management(commands.Cog):
             f"Deleting Category, *{category.name}*, and subsequent channels.",
         )
 
-        for channel in channels:
-            await channel.delete()
-            await log_send(ctx, f"Deleted Channel: *{channel.name}*")
+        for ch in channels:
+            await ch.delete()
+            await log_send(ctx, f"Deleted Channel: *{ch.name}*")
 
         await category.delete()
         await log_send(ctx, f"Deleted Category, *{category.name}*.")
@@ -151,10 +151,10 @@ class Management(commands.Cog):
 
         await log_send(ctx, f"Deleting all roles with base name: *{base_name}*")
 
-        for role in roles:
-            if base_name in role.name:
-                await role.delete()
-                await log_send(ctx, f"Deleted Role: *{role.name}*")
+        for r in roles:
+            if base_name in r.name:
+                await r.delete()
+                await log_send(ctx, f"Deleted Role: *{r.name}*")
 
         await log_send(ctx, f"Deleted all roles with base name: *{base_name}*")
 
@@ -199,9 +199,9 @@ class Management(commands.Cog):
         )
         channel_names = generate_names(base_name, start, end + 1)
 
-        for channel_name in channel_names:
-            await channel.clone(name=channel_name)
-            await log_send(ctx, f"Cloned Channel: *{channel_name}*")
+        for name in channel_names:
+            await channel.clone(name=name)
+            await log_send(ctx, f"Cloned Channel: *{name}*")
 
         await log_send(ctx, f"Cloned Channels: *{base_name}{start} -> {end}*")
 
@@ -280,13 +280,13 @@ class Management(commands.Cog):
         )
         role_names = generate_names(base_name, start, end + 1)
 
-        for role_name in role_names:
+        for name in role_names:
             await ctx.guild.create_role(
-                name=role_name,
+                name=name,
                 permissions=role.permissions,
                 color=role.color,
             )
-            await log_send(ctx, f"Cloned Role: *{role_name}*")
+            await log_send(ctx, f"Cloned Role: *{name}*")
 
         await log_send(ctx, f"Cloned Roles: *{base_name}{start} -> {end}*")
 
