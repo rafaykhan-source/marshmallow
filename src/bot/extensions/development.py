@@ -158,8 +158,8 @@ class Development(commands.Cog):
             ctx.guild.name,
         )
 
-        for cog_name in self.cog_names:
-            await self.bot.reload_extension(f"extensions.{cog_name}")
+        for name in self.cog_names:
+            await self.bot.reload_extension(f"extensions.{name}")
         logger.info("Reloaded all Cogs.")
         await ctx.send("Reloaded all Cogs.")
 
