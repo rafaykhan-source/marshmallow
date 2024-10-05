@@ -290,6 +290,52 @@ class Management(commands.Cog):
 
         await log_send(ctx, f"Cloned Roles: *{base_name}{start} -> {end}*")
 
+    @commands.hybrid_command()
+    @commands.guild_only()
+    @commands.has_any_role(*stg.get_admin_roles())
+    @commands.has_permissions(manage_roles=True)
+    async def grant_channel_access(
+        self,
+        ctx: commands.Context,
+        member: discord.Member,
+        channel: discord.TextChannel | discord.VoiceChannel,
+    ) -> None:
+        """Grants member basic access to channel.
+
+        Args:
+            ctx (commands.Context): The command context.
+            member (discord.Member): The member to grant access.
+            channel (discord.Channel): The channel to give member access to.
+        """
+        if not ctx.guild:
+            return
+
+        logger.info(
+            "%s called command 'grant_channel_access' in %s for %s.",
+            ctx.author.display_name,
+            channel.name,
+            member.name,
+        )
+
+        overwrite = discord.PermissionOverwrite()
+        if isinstance(channel, discord.TextChannel):
+            overwrite.send_messages = True
+            overwrite.read_messages = True
+            overwrite.read_message_history = True
+        if isinstance(channel, discord.VoiceChannel):
+            overwrite.connect = True
+            overwrite.use_soundboard = True
+            overwrite.use_voice_activation = True
+            overwrite.speak = True
+            overwrite.view_channel = True
+            overwrite.stream = True
+        if member:
+            await channel.set_permissions(member, overwrite=overwrite)
+            logger.info("Added %s to %s", member.display_name, channel)
+            await ctx.send(f"Added {member.display_name} to {channel}")
+
+        return
+
 
 async def setup(bot: commands.Bot) -> None:
     """Adds cog to the bot."""
