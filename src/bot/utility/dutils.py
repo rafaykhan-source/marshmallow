@@ -14,7 +14,7 @@ class DateTimeConverter:
 
     async def convert(self, ctx: commands.Context, s: str) -> dt.datetime:  # noqa
         """Returns datetime from the dt string."""
-        return dt.datetime.strptime(s, "%m/%d/%y %I:%M%p").astimezone(dt.timezone.utc)
+        return dt.datetime.strptime(s, "%m/%d/%y %I:%M%p").astimezone(dt.UTC)
 
 
 def get_basic_embed(title: str | None = None, description: str | None = None) -> Embed:

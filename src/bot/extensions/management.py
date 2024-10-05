@@ -162,7 +162,7 @@ class Management(commands.Cog):
     @commands.guild_only()
     @commands.has_any_role(*stg.get_admin_roles())
     @commands.has_permissions(manage_channels=True)
-    async def clone_channels(  # noqa
+    async def clone_channels(
         self,
         ctx: commands.Context,
         channel: discord.TextChannel | discord.VoiceChannel,
@@ -244,7 +244,7 @@ class Management(commands.Cog):
     @commands.guild_only()
     @commands.has_any_role(*stg.get_admin_roles())
     @commands.has_permissions(manage_roles=True)
-    async def clone_roles(  # noqa
+    async def clone_roles(
         self,
         ctx: commands.Context,
         role: discord.Role,

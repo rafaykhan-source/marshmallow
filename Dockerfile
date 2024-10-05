@@ -1,11 +1,10 @@
-FROM python:3.10
+FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim
 
-COPY pyproject.toml /app/
 WORKDIR /app
-
 RUN mkdir build
-RUN pip install .
-
 COPY . .
 
-CMD [ "python", "src/bot/run.py" ]
+RUN uv venv
+RUN uv pip install .
+
+CMD [ "uv", "run", "src/bot/run.py" ]

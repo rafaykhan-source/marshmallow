@@ -1,24 +1,20 @@
-[build-system]
-requires = ["setuptools"]
-build-backend = "setuptools.build_meta"
-
-[tool.distutils.egg_info]
-egg_base = "build"
-
 [project]
 name = "marshmallow"
-version = "0.0.2"
-authors = [{ name = "Rafay K" }]
-maintainers = [{ name = "Rafay K" }]
+version = "0.2.0"
 description = "Automates administrative and managerial tasks on Princeton EBCAO Discords."
 readme = "README.md"
-requires-python = ">=3.10"
-dependencies = ["discord.py", "python-dotenv", "pandas", "pyyaml"]
+requires-python = ">=3.12"
+dependencies = [
+    "discord-py>=2.4.0",
+    "pandas>=2.2.3",
+    "python-dotenv>=1.0.1",
+    "pyyaml>=6.0.2",
+]
 
-[project.optional-dependencies]
-development = ["ruff", "mypy", "pre-commit"]
-
-[tool.ruff]
+[tool.uv]
+dev-dependencies = [
+    "pre-commit>=3.8.0",
+]
 
 [tool.ruff.lint]
 select = [
