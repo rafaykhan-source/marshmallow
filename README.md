@@ -8,15 +8,13 @@ Automates administrative and managerial tasks on Princeton EBCAO Discords.
 
 In the `marshmallow` directory, run:
 ```bash
-./scripts/setup.sh
+mkdir build logs data assignments messages
+pre-commit install
 ```
 
-To setup the virtual environment, run:
+## Usage (Local):
 ```bash
-python3 -m venv ~/.virtualenvs/marshmallow
-source ~/.virtualenvs/marshmallow/bin/activate
-pip install . && pip install .[development]
-pre-commit install
+uv run src/bot/run.py
 ```
 
 ## Usage (Docker Compose):
