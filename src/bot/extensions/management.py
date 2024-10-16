@@ -8,6 +8,7 @@ import logging
 
 import discord
 import settings as stg
+import utility.dchannels as dch
 from discord.ext import commands
 
 logger = logging.getLogger("commands")
@@ -307,7 +308,7 @@ class Management(commands.Cog):
             member (discord.Member): The member to grant access.
             channel (discord.Channel): The channel to give member access to.
         """
-        if not ctx.guild:
+        if (not ctx.guild) or (not channel) or (not member):
             return
 
         logger.info(
@@ -317,24 +318,13 @@ class Management(commands.Cog):
             member.name,
         )
 
-        overwrite = discord.PermissionOverwrite()
-        if isinstance(channel, discord.TextChannel):
-            overwrite.send_messages = True
-            overwrite.read_messages = True
-            overwrite.read_message_history = True
-        if isinstance(channel, discord.VoiceChannel):
-            overwrite.connect = True
-            overwrite.use_soundboard = True
-            overwrite.use_voice_activation = True
-            overwrite.speak = True
-            overwrite.view_channel = True
-            overwrite.stream = True
-        if member:
-            await channel.set_permissions(member, overwrite=overwrite)
-            logger.info("Added %s to %s", member.display_name, channel)
-            await ctx.send(f"Added {member.display_name} to {channel}")
+        await channel.set_permissions(
+            target=member,
+            overwrite=dch.get_basic_access_overwrite(channel),
+        )
 
-        return
+        logger.info("Added %s to %s", member.display_name, channel)
+        await ctx.send(f"Added {member.display_name} to {channel}")
 
 
 async def setup(bot: commands.Bot) -> None:

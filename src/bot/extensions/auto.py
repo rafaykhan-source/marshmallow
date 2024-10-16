@@ -4,14 +4,18 @@ This module maintains role-based role auto-assignments.
 """
 
 import logging
+from typing import TYPE_CHECKING
 
-import discord
 import settings as stg
 import utility.dataproducer as dp
+import utility.dchannels as dch
 import utility.dmaps as dm
 import utility.processor as pr
 from discord.ext import commands
 from settings import Server
+
+if TYPE_CHECKING:
+    import discord
 
 logger = logging.getLogger("assign")
 
@@ -130,7 +134,7 @@ class Auto(commands.Cog):
     @commands.guild_only()
     @commands.has_any_role(*stg.get_admin_roles())
     @commands.has_permissions(manage_roles=True)
-    async def assign_affinity(self, ctx: commands.Context) -> None:  # noqa
+    async def assign_affinity(self, ctx: commands.Context) -> None:
         """Assigns affinity groups.
 
         Args:
@@ -185,18 +189,7 @@ class Auto(commands.Cog):
             for channel in channels:
                 if not channel:
                     continue
-                overwrite = discord.PermissionOverwrite()
-                if isinstance(channel, discord.TextChannel):
-                    overwrite.send_messages = True
-                    overwrite.read_messages = True
-                    overwrite.read_message_history = True
-                if isinstance(channel, discord.VoiceChannel):
-                    overwrite.connect = True
-                    overwrite.use_soundboard = True
-                    overwrite.use_voice_activation = True
-                    overwrite.speak = True
-                    overwrite.view_channel = True
-                    overwrite.stream = True
+                overwrite = dch.get_basic_access_overwrite(channel)
                 if member:
                     await channel.set_permissions(member, overwrite=overwrite)
                     logger.info("Added %s to %s", member.display_name, channel)
