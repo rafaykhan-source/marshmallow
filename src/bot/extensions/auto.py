@@ -8,7 +8,6 @@ from typing import TYPE_CHECKING
 
 import settings as stg
 import utility.dataproducer as dp
-import utility.dchannels as dch
 import utility.dmaps as dm
 import utility.processor as pr
 from discord.ext import commands
@@ -150,52 +149,52 @@ class Auto(commands.Cog):
         )
 
         people = dp.get_affinity_people()
-        missing = []
-        text_to_voice = {
-            "fli-rural": "FLI Rural",
-            "fli-muslim": "FLI Muslim",
-            "fli-apida": "FLI APIDA",
-            "fli-black": "FLI Black",
-            "fli-christian": "FLI Christian",
-            "fli-latine": "FLI Latine",
-            "fli-women-femmes-of-color": "FLI Women and Femme of Color",
-            "fli-ability": "FLI Ability",
-            "fli-transfer-and-vets": "FLI Transfers And Vets",
-            "q-q-f-f": "QQFF",
-            "fli-indigenous": "FLI Indigenous",
-            "fli-international": "FLI International",
-        }
+        channel_names = [
+            "💬│fli-rural",
+            "💬│fli-muslim",
+            "💬│fli-apida",
+            "💬│fli-black",
+            "💬│fli-christian",
+            "💬│fli-latine",
+            "💬│fli-women-femmes-of-color",
+            "💬│fli-ability",
+            "💬│fli-transfer-and-vets",
+            "💬│q-q-f-f",
+            "💬│fli-indigenous",
+            "💬│fli-international",
+            "💬│fli-foster",
+            "fli-rural-lead",
+            "fli-muslim-lead",
+            "fli-apida-lead",
+            "fli-black-lead",
+            "fli-christian-lead",
+            "fli-latine-lead",
+            "fli-women-femmes-of-color-lead",
+            "fli-ability-lead",
+            "fli-transfer-and-vets-lead",
+            "q-q-f-f-lead",
+            "fli-indigenous-lead",
+            "fli-international-lead",
+            "fli-foster-lead",
+        ]
 
-        text_channels = await dm.get_channel_map(ctx, list(text_to_voice.keys()))
-        voice_channels = await dm.get_channel_map(ctx, list(text_to_voice.values()))
+        text_channels = await dm.get_channel_map(ctx, channel_names)
+        member_alias_map = pr.create_member_alias_map(ctx.guild.members)
 
         for person in people:
             member = None
-            member_alias_map = pr.create_member_alias_map(ctx.guild.members)
             alg_names = person["alg_names"]
             for mem, aliases in member_alias_map.items():
                 if pr.is_name_match(aliases, alg_names):
                     member = mem
                     break
 
-            channels = []
             groups = person["affinity_groups"]
-            for group in groups:
-                if group in text_channels:
-                    channels.append(text_channels[group])
-                if group in voice_channels:
-                    channels.append(voice_channels[group])
+            channels = [text_channels[g] for g in groups if g in text_channels]
 
-            for channel in channels:
-                if not channel:
-                    continue
-                overwrite = dch.get_basic_access_overwrite(channel)
-                if member:
-                    await channel.set_permissions(member, overwrite=overwrite)
-                    logger.info("Added %s to %s", member.display_name, channel)
-                    await ctx.send(f"Added {member.display_name} to {channel}")
-                else:
-                    missing.append(person["full_name"])
+            management = self.bot.get_cog("Management")
+            for ch in channels:
+                await management.grant_channel_access(ctx, member, ch)
 
 
 async def setup(bot: commands.Bot) -> None:
