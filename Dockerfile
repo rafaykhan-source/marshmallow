@@ -5,6 +5,5 @@ RUN mkdir build
 COPY . .
 
 RUN uv venv
-RUN uv pip install .
 
 CMD [ "uv", "run", "src/bot/run.py" ]
