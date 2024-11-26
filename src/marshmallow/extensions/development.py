@@ -8,9 +8,10 @@ commands relevant to live bot development.
 
 import logging
 
-import settings as stg
 from discord.ext import commands
-from settings import Server
+
+import marshmallow.settings as stg
+from marshmallow.settings import Server
 
 logger = logging.getLogger("commands")
 

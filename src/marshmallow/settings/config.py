@@ -61,7 +61,7 @@ def get_cog_names() -> set[str]:
         set[str]: The cog names.
     """
     cogs = set()
-    for file in os.listdir("src/bot/extensions/"):
+    for file in os.listdir("src/marshmallow/extensions/"):
         if file.endswith(".py"):
             cogs.add(file[:-3])
 
@@ -95,7 +95,7 @@ def get_logging_config() -> dict:
         dict: The logger configuration.
     """
     with open(
-        "src/bot/settings/logging_config.yml",
+        "src/marshmallow/settings/logging_config.yml",
         encoding="UTF-8",
     ) as stream:
         try:

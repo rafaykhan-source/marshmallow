@@ -6,12 +6,13 @@ This module maintains role-based role auto-assignments.
 import logging
 from typing import TYPE_CHECKING
 
-import settings as stg
-import utility.dataproducer as dp
-import utility.dmaps as dm
-import utility.processor as pr
 from discord.ext import commands
-from settings import Server
+
+import marshmallow.settings as stg
+import marshmallow.utility.dataproducer as dp
+import marshmallow.utility.dmaps as dm
+import marshmallow.utility.processor as pr
+from marshmallow.settings import Server
 
 if TYPE_CHECKING:
     import discord

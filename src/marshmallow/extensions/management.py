@@ -7,9 +7,10 @@ and deletion of roles, channels.
 import logging
 
 import discord
-import settings as stg
-import utility.dchannels as dch
 from discord.ext import commands
+
+import marshmallow.settings as stg
+import marshmallow.utility.dchannels as dch
 
 logger = logging.getLogger("commands")
 

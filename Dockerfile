@@ -6,4 +6,4 @@ COPY . .
 
 RUN uv venv
 
-CMD [ "uv", "run", "src/bot/run.py" ]
+CMD [ "uv", "run", "src/marshmallow" ]

@@ -6,7 +6,7 @@ import discord
 from discord import Color, Embed
 from discord.ext import commands
 
-from . import dataproducer as dp
+import marshmallow.utility.dataproducer as dp
 
 
 class DateTimeConverter:

@@ -10,10 +10,11 @@ import logging
 import sys
 
 import discord
-import settings as stg
-import utility.dataproducer as dp
 from discord.ext import commands
-from settings import Server
+
+import marshmallow.settings as stg
+import marshmallow.utility.dataproducer as dp
+from marshmallow.settings import Server
 
 logger = logging.getLogger("marshmallow")
 

@@ -14,7 +14,7 @@ pre-commit install
 
 ## Usage (Local):
 ```bash
-uv run src/bot/run.py
+uv run src/marshmallow/run.py
 ```
 
 ## Usage (Docker Compose):

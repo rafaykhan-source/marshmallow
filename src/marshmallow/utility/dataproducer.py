@@ -9,7 +9,8 @@ import json
 import logging
 
 import pandas as pd
-from adt import Person
+
+from marshmallow.adt import Person
 
 logger = logging.getLogger("utility")
 
@@ -112,7 +113,7 @@ def get_welcome_messages() -> dict:
         dict: The mapping of welcome messages.
     """
     with open(
-        "src/bot/settings/resources/welcomes.json",
+        "src/marshmallow/settings/resources/welcomes.json",
         encoding="UTF-8",
     ) as data:
         return json.load(data)

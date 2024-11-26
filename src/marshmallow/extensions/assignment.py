@@ -8,13 +8,14 @@ import asyncio
 import logging
 
 import discord
-import settings as stg
-import utility.datahandler as dh
-import utility.dataproducer as dp
-import utility.dutils as du
-import utility.processor as pr
 from discord.ext import commands, tasks
-from settings import Server
+
+import marshmallow.settings as stg
+import marshmallow.utility.datahandler as dh
+import marshmallow.utility.dataproducer as dp
+import marshmallow.utility.dutils as du
+import marshmallow.utility.processor as pr
+from marshmallow.settings import Server
 
 logger = logging.getLogger("assign")
 

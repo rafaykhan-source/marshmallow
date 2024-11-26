@@ -6,5 +6,5 @@ data
 assignments
 messages
 logs
-src/bot/settings/.env
-src/bot/settings/resources
+src/marshmallow/settings/.env
+src/marshmallow/settings/resources

@@ -7,11 +7,12 @@ commands used to get information about guild members.
 import logging
 
 import discord
-import settings as stg
 import utility.datahandler as dh
 import utility.dutils as du
 from discord import File
 from discord.ext import commands
+
+import marshmallow.settings as stg
 
 logger = logging.getLogger("commands")
 

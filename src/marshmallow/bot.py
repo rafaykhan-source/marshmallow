@@ -14,8 +14,9 @@ Typical usage example:
 
 import logging
 
-import settings as stg
 from discord.ext import commands
+
+import marshmallow.settings as stg
 
 logger = logging.getLogger(__name__)
 

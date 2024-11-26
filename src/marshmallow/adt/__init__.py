@@ -4,6 +4,6 @@ It contains the Person module, responsible for wrapping information
 typically associated with a person in an object.
 """
 
-from .person import Person
+from marshmallow.adt.person import Person
 
 __all__ = ["Person"]
