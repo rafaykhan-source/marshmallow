@@ -9,10 +9,10 @@ from typing import TYPE_CHECKING
 from discord.ext import commands
 
 import marshmallow.settings as stg
-import marshmallow.utility.dataproducer as dp
 import marshmallow.utility.dmaps as dm
 import marshmallow.utility.processor as pr
 from marshmallow.settings import Server
+from marshmallow.utility.dataproducer import DataServer
 
 if TYPE_CHECKING:
     import discord
@@ -66,6 +66,7 @@ class Auto(commands.Cog):
         "The mapping between group names and nation names for assignment."
         self.nation_map: dict[str, discord.Role | None] = {}
         "The mapping of nations to guild roles."
+        self.server: DataServer = DataServer()
 
     @commands.hybrid_command()
     @commands.guild_only()
@@ -149,7 +150,7 @@ class Auto(commands.Cog):
             ctx.guild.name,
         )
 
-        people = dp.get_affinity_people()
+        people = self.server.get_affinity_people()
         channel_names = [
             "💬│fli-rural",
             "💬│fli-muslim",

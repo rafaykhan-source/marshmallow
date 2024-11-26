@@ -55,10 +55,5 @@ class MarshmallowBotClient(commands.Bot):
             logger.info("Logged in as %s (ID: %s)", self.user, self.user.id)
 
 
-def main() -> None:
-    """Unit Testing."""
-    return
-
-
 if __name__ == "__main__":
-    main()
+    pass

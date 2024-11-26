@@ -6,8 +6,6 @@ import discord
 from discord import Color, Embed
 from discord.ext import commands
 
-import marshmallow.utility.dataproducer as dp
-
 
 class DateTimeConverter:
     """Converts a string to a datetime."""
@@ -84,7 +82,11 @@ def get_failed_assignments_embed(assignment_group: str) -> Embed:
     embed = get_basic_embed("Unmatched Person Report")
     embed.add_field(
         name="People:",
-        value="\n".join(dp.get_failed_assignments(assignment_group)),
+        value="\n".join([assignment_group]),
     )
 
     return embed
+
+
+if __name__ == "__main__":
+    pass

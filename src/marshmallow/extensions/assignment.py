@@ -11,11 +11,11 @@ import discord
 from discord.ext import commands, tasks
 
 import marshmallow.settings as stg
-import marshmallow.utility.datahandler as dh
-import marshmallow.utility.dataproducer as dp
 import marshmallow.utility.dutils as du
 import marshmallow.utility.processor as pr
 from marshmallow.settings import Server
+from marshmallow.utility.dataproducer import DataServer
+from marshmallow.utility.datawriter import DataWriter
 
 logger = logging.getLogger("assign")
 
@@ -96,6 +96,10 @@ class Assignment(commands.Cog):
         "The cog's lock."
         self.assign_cache: dict[str, commands.Context] = {}
         "The cog's cache for automatic role assignments."
+        self.server: DataServer = DataServer()
+        "A server for data needed in the cog."
+        self.writer: DataWriter = DataWriter()
+        "A writer for data from the cog."
 
     @tasks.loop(minutes=15.0)
     async def assigner(self) -> None:
@@ -165,7 +169,7 @@ class Assignment(commands.Cog):
             return
 
         self.cache_assignment(ctx, assignment_group)
-        people = dp.get_people(assignment_group)
+        people = self.server.get_people(assignment_group)
         member_alias_map = pr.create_member_alias_map(ctx.guild.members)
 
         for person in people:
@@ -182,8 +186,8 @@ class Assignment(commands.Cog):
         logger.info("Finished Role Assignments.")
         await ctx.send("*Finished Role Assignments.*")
 
-        dh.write_assignment_report(people, assignment_group)
-        embed = du.get_assignment_summary_embed(ctx, *dh.get_assignment_counts(people))
+        self.writer.write_assignment_report(people, assignment_group)
+        embed = du.get_assignment_summary_embed(ctx, *pr.get_assignment_counts(people))
         await ctx.send(embed=embed)
 
         return

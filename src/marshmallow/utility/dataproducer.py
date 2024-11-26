@@ -5,142 +5,73 @@ marshmallow bot functionality and mapping this data to
 custom ADTs.
 """
 
+import csv
 import json
 import logging
-
-import pandas as pd
+from dataclasses import dataclass
 
 from marshmallow.adt import Person
 
 logger = logging.getLogger("utility")
 
 
-def __create_person(row: list) -> Person:
-    return Person(
-        full_name=row[0],
-        email=row[1],
-        role_names=row[2].split(","),
-        alg_names=row[3].split(","),
-    )
+@dataclass
+class DataServer:
+    """This class is responsible for reading and serving data to Marshmallow."""
 
+    def get_people(self, group: str) -> list[Person]:
+        """Returns the people associated with the group.
 
-def get_people(assignment_group: str) -> list[Person]:
-    """Returns people associated with the assignment group.
+        Args:
+            group (str): The group to retrieve.
 
-    Returns:
-        list[Person]: The people in the assignment group.
-    """
-    data = __get_assignment_group_data(assignment_group)
-    logger.info("Retrieved People of %s.", assignment_group)
+        Returns:
+            list[Person]: The people associated with the group.
+        """
+        with open(f"data/{group}.csv") as csv_file:
+            logger.info("Retrieved People of %s.", group)
+            reader = csv.DictReader(csv_file)
+            return [
+                Person(
+                    row["full_name"],
+                    row["email"],
+                    row["role_names"].split(","),
+                    row["alg_names"].split(","),
+                )
+                for row in reader
+            ]
 
-    return list(map(__create_person, data.values.tolist()))
+    def get_affinity_people(self) -> list[dict]:
+        """Returns affinity group people.
 
+        Returns:
+            list[dict]: The affinity group people.
+        """
+        with open("data/affinity.csv") as csv_file:
+            logger.info("Retrieved Affinity People.")
+            reader = csv.DictReader(csv_file)
+            return [
+                {
+                    "full_name": row["full_name"],
+                    "email": row["email"],
+                    "affinity_groups": row["affinity_groups"].split(","),
+                    "alg_names": row["alg_names"].split(","),
+                }
+                for row in reader
+            ]
 
-def __load_data(csv_name: str) -> pd.DataFrame:
-    """Returns data from specified csv.
+    def get_welcome_messages(self) -> dict:
+        """Returns a mapping of welcome messages.
 
-    Returns:
-        pd.DataFrame: The data.
-    """
-    try:
-        data = pd.read_csv(csv_name)
-        logger.info("Loaded Data From: %s", csv_name)
-    except FileNotFoundError:
-        logger.exception("File Not Found: %s", csv_name)
-        data = pd.DataFrame()
-
-    return data
-
-
-def __create_affinity_person(row: list) -> dict:
-    return {
-        "full_name": row[0],
-        "email": row[1],
-        "affinity_groups": row[2].split(","),
-        "alg_names": row[3].split(","),
-    }
-
-
-def get_affinity_people() -> list[dict]:
-    """Returns affinity group people.
-
-    Returns:
-        list[dict]: The affinity group people.
-    """
-    data = __get_assignment_group_data("affinity")
-    return list(map(__create_affinity_person, data.values.tolist()))
-
-
-def __get_assignment_group_data(assignment_group: str) -> pd.DataFrame:
-    """Returns assignment group data for specified assignment group.
-
-    Args:
-        assignment_group (str): The assignment group.
-
-    Returns:
-        pd.DataFrame: The assignment group's data.
-    """
-    if not isinstance(assignment_group, str):
-        logger.error("Invalid Type for Student Group: %s", type(assignment_group))
-        return pd.DataFrame()
-
-    assignment_group = assignment_group.lower()
-    return __load_data(f"data/{assignment_group}.csv")
-
-
-def get_assignment_report(assignment_group: str) -> pd.DataFrame:
-    """Returns the assignment report for assignment group.
-
-    Args:
-        assignment_group (str): The assignment group.
-
-    Returns:
-        pd.DataFrame: The assignment report.
-    """
-    if not isinstance(assignment_group, str):
-        logger.error("Invalid Type for Student Group: %s", type(assignment_group))
-        return pd.DataFrame()
-
-    assignment_group = assignment_group.lower()
-
-    return __load_data(f"assignments/{assignment_group}report.csv")
-
-
-def get_welcome_messages() -> dict:
-    """Returns a mapping of welcome messages.
-
-    Returns:
-        dict: The mapping of welcome messages.
-    """
-    with open(
-        "src/marshmallow/settings/resources/welcomes.json",
-        encoding="UTF-8",
-    ) as data:
-        return json.load(data)
-
-
-def get_failed_assignments(assignment_group: str) -> list[str]:
-    """Returns people of assignment_group who were not assigned their roles.
-
-    Args:
-        assignment_group (str): assignment report
-
-    Returns:
-        list[str]: failed assignments for assignment group
-    """
-    report = get_assignment_report(assignment_group)
-    report = report[report["found"] == False]  # noqa
-
-    unmatched = report["full_name"].tolist()
-    unmatched.sort()
-
-    return unmatched
-
-
-def main() -> None:
-    """Unit Testing."""
-    return
+        Returns:
+            dict: The mapping of welcome messages.
+        """
+        with open(
+            "src/marshmallow/settings/resources/welcomes.json",
+            encoding="UTF-8",
+        ) as data:
+            return json.load(data)
 
 
 if __name__ == "__main__":
-    main()
+    pass

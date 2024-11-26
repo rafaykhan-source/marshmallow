@@ -170,10 +170,5 @@ class Server(IntEnum):
     FGLI_CONSORTIUM = os.getenv("FGLI_CONSORTIUM")
 
 
-def main() -> None:
-    """Unit Testing."""
-    return
-
-
 if __name__ == "__main__":
-    main()
+    pass

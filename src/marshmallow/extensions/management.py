@@ -325,7 +325,7 @@ class Management(commands.Cog):
         )
 
         logger.info("Added %s to %s", member.display_name, channel)
-        await ctx.send(f"Added {member.display_name} to {channel}")
+        await ctx.send(f"Added {member.display_name} to {channel}.")
 
 
 async def setup(bot: commands.Bot) -> None:

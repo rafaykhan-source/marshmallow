@@ -7,12 +7,12 @@ commands used to get information about guild members.
 import logging
 
 import discord
-import utility.datahandler as dh
-import utility.dutils as du
 from discord import File
 from discord.ext import commands
 
 import marshmallow.settings as stg
+import marshmallow.utility.dutils as du
+from marshmallow.utility.datawriter import DataWriter
 
 logger = logging.getLogger("commands")
 
@@ -31,6 +31,9 @@ class Information(commands.Cog):
     def __init__(self, bot: commands.Bot) -> None:
         """Instantiates the Information Cog."""
         self.bot = bot
+        "The cog's associated bot client."
+        self.writer: DataWriter = DataWriter()
+        "A writer for data from the cog."
 
     @commands.hybrid_command()
     @commands.guild_only()
@@ -46,7 +49,7 @@ class Information(commands.Cog):
         )
 
         marshmallow_icon_file = File(
-            "src/bot/settings/resources/marshmallow_icon.png",
+            "src/marshmallow/settings/resources/marshmallow_icon.png",
             filename="marshmallow_icon.png",
         )
 
@@ -154,54 +157,10 @@ class Information(commands.Cog):
             record[person] += 1
         await ctx.send(f"Finished Checking Message History {channel.name}.")
 
-        dh.write_message_counts(
+        self.writer.write_message_counts(
             record,
             f"{channel.name[3:]}-{end.strftime('%m-%d-%y')}",
         )
-
-        await ctx.send("Channel Activity Logged.")
-
-    @commands.hybrid_command()
-    @commands.guild_only()
-    @commands.has_any_role(*stg.get_admin_roles())
-    async def get_channel_activity(
-        self,
-        ctx: commands.Context,
-        channel: discord.TextChannel,
-        start: du.DateTimeConverter,
-        end: du.DateTimeConverter,
-    ) -> None:
-        """Maps people's daily message activity in channel from start date.
-
-        Args:
-            ctx (commands.Context): The command context.
-            channel (discord.TextChannel): Channel to log activity for.
-            start (str): Activity tracking start date, e.g. "02/15/23 12:53PM".
-            end (str): Activity tracking end date "02/15/23 12:57PM".
-        """
-        if not ctx.guild:
-            return
-
-        logger.info(
-            "%s called command 'get_channel_activity' in %s.",
-            ctx.author.display_name,
-            ctx.guild.name,
-        )
-
-        messages = channel.history(limit=None, after=start, before=end)
-
-        record = {}
-        await ctx.send(f"Checking Message History of {channel.name}.")
-        async for m in messages:
-            person = f"{m.author.display_name} ({m.author.name})"
-            msg_date = m.created_at.strftime("%m/%d/%Y")
-            if person not in record:
-                record[person] = set()
-            record[person].add(msg_date)
-        await ctx.send(f"Finished Checking Message History {channel.name}.")
-
-        sorted_record = {person: sorted(dates) for person, dates in record.items()}
-        dh.write_daily_message_report(sorted_record, channel.name)
 
         await ctx.send("Channel Activity Logged.")
 

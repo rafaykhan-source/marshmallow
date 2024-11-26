@@ -15,11 +15,10 @@ async def main() -> None:
     logger.info("Instantiating Marshmallow Bot Client.")
     marsh = MarshmallowBotClient()
 
-    logger.info("Retrieving Token.")
-
     async with marsh as bot:
-        logger.info("Starting Marshmallow.")
+        logger.info("Retrieving Token.")
         await bot.start(stg.get_token())
+        logger.info("Starting Marshmallow.")
 
 
 asyncio.run(main())

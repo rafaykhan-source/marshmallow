@@ -55,3 +55,7 @@ async def get_role_map(
         role_map[role] = guild_role
 
     return role_map
+
+
+if __name__ == "__main__":
+    pass

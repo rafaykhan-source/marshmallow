@@ -7,14 +7,13 @@ nickname to their first and last name.
 """
 
 import logging
-import sys
 
 import discord
 from discord.ext import commands
 
 import marshmallow.settings as stg
-import marshmallow.utility.dataproducer as dp
 from marshmallow.settings import Server
+from marshmallow.utility.dataproducer import DataServer
 
 logger = logging.getLogger("marshmallow")
 
@@ -36,7 +35,9 @@ class Introductions(commands.Cog):
         """
         self.bot: commands.Bot = bot
         "The cog's associated bot client."
-        self.welcomes: dict = dp.get_welcome_messages()
+        self.server: DataServer = DataServer()
+        "The server of data for the cog."
+        self.welcomes: dict = self.server.get_welcome_messages()
         "The program to welcome message mapping."
 
     @commands.Cog.listener()
@@ -63,12 +64,11 @@ class Introductions(commands.Cog):
             case Server.MARSHMALLOW_DEV:
                 await member.send(self.welcomes["ebcao"])
             case _:
-                logger.error(
+                logger.warning(
                     "%s joined unrecognized guild '%s'.",
                     member.display_name,
                     member.guild.name,
                 )
-                sys.exit(1)
 
         logger.info(
             "Sent welcome message to %s for joining '%s'.",

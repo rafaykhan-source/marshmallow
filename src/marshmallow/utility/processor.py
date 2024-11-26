@@ -5,7 +5,8 @@ import re
 from collections.abc import Sequence
 
 import discord
-import pandas as pd  # noqa: F401
+
+from marshmallow.adt.person import Person
 
 logger = logging.getLogger("assign")
 
@@ -90,10 +91,22 @@ def create_member_alias_map(
     return {member: __get_member_aliases(member) for member in members}
 
 
-def main() -> None:
-    """Unit Testing."""
-    return
+def get_assignment_counts(people: list[Person]) -> tuple[int, int]:
+    """Returns the assignment counts.
+
+    Args:
+        people (list[Person]): The people assigned roles.
+
+    Returns:
+        tuple[int, int]: The found and not found counts of people.
+    """
+    found = 0
+    for person in people:
+        if person.guild_member:
+            found += 1
+
+    return found, len(people) - found
 
 
 if __name__ == "__main__":
-    main()
+    pass

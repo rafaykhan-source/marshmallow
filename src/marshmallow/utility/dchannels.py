@@ -28,3 +28,7 @@ def get_basic_access_overwrite(
         overwrite.stream = True
 
     return overwrite
+
+
+if __name__ == "__main__":
+    pass
