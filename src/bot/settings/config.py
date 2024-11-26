@@ -167,6 +167,7 @@ class Server(IntEnum):
     FSI_RESIDENTIAL = os.getenv("FSI_RESIDENTIAL")
     EBCAO_SUMMER = os.getenv("EBCAO_SUMMER")
     MARSHMALLOW_DEV = os.getenv("MARSHMALLOW_DEV")
+    FGLI_CONSORTIUM = os.getenv("FGLI_CONSORTIUM")
 
 
 def main() -> None:
