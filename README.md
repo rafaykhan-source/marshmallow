@@ -2,19 +2,29 @@
 
 Automates administrative and managerial tasks on Princeton EBCAO Discords.
 
-## Configuration:
+## Development Setup
+The project uses `ruff`, `mypy`, and `pre-commit` for linting, formatting, type-checking, and code consistency checks. You can install all of these tools using `uv tool install` and run them on the project where the respective tool configurations are stored in the `pyproject.toml`.
 
-### Development Setup
+Setup the virtual environment:
+```
+uv venv
+```
 
-In the `marshmallow` directory, run:
+Setup pre-commit:
+```
+pre-commit autoupdate
+pre-commit install
+pre-commit run -a
+```
+
+In the root directory, run:
 ```bash
 mkdir build logs data assignments messages
-pre-commit install
 ```
 
 ## Usage (Local):
 ```bash
-uv run src/marshmallow/run.py
+uv run src/marshmallow
 ```
 
 ## Usage (Docker Compose):
