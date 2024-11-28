@@ -170,7 +170,7 @@ class Assignment(commands.Cog):
 
         self.cache_assignment(ctx, assignment_group)
         people = self.server.get_people(assignment_group)
-        member_alias_map = pr.create_member_alias_map(ctx.guild.members)
+        member_alias_map = pr.get_member_alias_map(ctx.guild.members)
 
         for person in people:
             person.set_guild_member(member_alias_map)

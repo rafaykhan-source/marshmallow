@@ -181,7 +181,7 @@ class Auto(commands.Cog):
         ]
 
         text_channels = await dm.get_channel_map(ctx, channel_names)
-        member_alias_map = pr.create_member_alias_map(ctx.guild.members)
+        member_alias_map = pr.get_member_alias_map(ctx.guild.members)
 
         for person in people:
             member = None

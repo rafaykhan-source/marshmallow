@@ -9,13 +9,13 @@ from marshmallow.utility.dutils import (
     get_people_embed,
 )
 from marshmallow.utility.processor import (
-    create_member_alias_map,
+    get_member_alias_map,
 )
 
 __all__ = [
-    "create_member_alias_map",
     "get_basic_embed",
     "get_channel_map",
+    "get_member_alias_map",
     "get_people_embed",
     "get_role_map",
 ]

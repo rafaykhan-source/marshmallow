@@ -77,7 +77,7 @@ def __get_member_aliases(member: discord.Member) -> list[str]:
     return __clean_aliases(list(aliases))
 
 
-def create_member_alias_map(
+def get_member_alias_map(
     members: Sequence[discord.Member],
 ) -> dict[discord.Member, list[str]]:
     """Returns a mapping of members to their clean aliases.
