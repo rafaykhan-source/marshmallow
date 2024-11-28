@@ -6,7 +6,7 @@ from collections.abc import Sequence
 
 import discord
 
-from marshmallow.adt.person import Person
+from marshmallow.models import GuildPerson
 
 logger = logging.getLogger("assign")
 
@@ -91,11 +91,11 @@ def create_member_alias_map(
     return {member: __get_member_aliases(member) for member in members}
 
 
-def get_assignment_counts(people: list[Person]) -> tuple[int, int]:
+def get_assignment_counts(people: list[GuildPerson]) -> tuple[int, int]:
     """Returns the assignment counts.
 
     Args:
-        people (list[Person]): The people assigned roles.
+        people (list[GuildPerson]): The people assigned roles.
 
     Returns:
         tuple[int, int]: The found and not found counts of people.

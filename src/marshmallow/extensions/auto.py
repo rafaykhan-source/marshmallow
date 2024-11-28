@@ -185,13 +185,13 @@ class Auto(commands.Cog):
 
         for person in people:
             member = None
-            alg_names = person["alg_names"]
+            alg_names = person.info.alg_names
             for mem, aliases in member_alias_map.items():
                 if pr.is_name_match(aliases, alg_names):
                     member = mem
                     break
 
-            groups = person["affinity_groups"]
+            groups = person.info.affinity_groups
             channels = [text_channels[g] for g in groups if g in text_channels]
 
             management = self.bot.get_cog("Management")

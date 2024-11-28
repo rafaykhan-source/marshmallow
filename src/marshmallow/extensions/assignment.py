@@ -1,6 +1,6 @@
 """This module represents a portion of the bot relevant to automatic role assignment.
 
-The assignment module primarily operating on a Person ADT,
+The assignment module primarily operating on a Person models,
 storing assignment result information.
 """
 

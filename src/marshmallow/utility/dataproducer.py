@@ -2,7 +2,7 @@
 
 It is responsible for loading data pertaining to the
 marshmallow bot functionality and mapping this data to
-custom ADTs.
+custom models.
 """
 
 import csv
@@ -10,7 +10,7 @@ import json
 import logging
 from dataclasses import dataclass
 
-from marshmallow.adt import Person
+from marshmallow.models import GuildPerson, Information
 
 logger = logging.getLogger("utility")
 
@@ -19,29 +19,31 @@ logger = logging.getLogger("utility")
 class DataServer:
     """This class is responsible for reading and serving data to Marshmallow."""
 
-    def get_people(self, group: str) -> list[Person]:
+    def get_people(self, group: str) -> list[GuildPerson]:
         """Returns the people associated with the group.
 
         Args:
             group (str): The group to retrieve.
 
         Returns:
-            list[Person]: The people associated with the group.
+            list[GuildPerson]: The people associated with the group.
         """
         with open(f"data/{group}.csv") as csv_file:
             logger.info("Retrieved People of %s.", group)
             reader = csv.DictReader(csv_file)
             return [
-                Person(
-                    row["full_name"],
-                    row["email"],
-                    row["role_names"].split(","),
-                    row["alg_names"].split(","),
+                GuildPerson(
+                    Information(
+                        row["full_name"],
+                        row["email"],
+                        row["role_names"].split(","),
+                        row["alg_names"].split(","),
+                    ),
                 )
                 for row in reader
             ]
 
-    def get_affinity_people(self) -> list[dict]:
+    def get_affinity_people(self) -> list[GuildPerson]:
         """Returns affinity group people.
 
         Returns:
@@ -51,12 +53,14 @@ class DataServer:
             logger.info("Retrieved Affinity People.")
             reader = csv.DictReader(csv_file)
             return [
-                {
-                    "full_name": row["full_name"],
-                    "email": row["email"],
-                    "affinity_groups": row["affinity_groups"].split(","),
-                    "alg_names": row["alg_names"].split(","),
-                }
+                GuildPerson(
+                    Information(
+                        row["full_name"],
+                        row["email"],
+                        affinity_groups=row["affinity_groups"].split(","),
+                        alg_names=row["alg_names"].split(","),
+                    ),
+                )
                 for row in reader
             ]
 

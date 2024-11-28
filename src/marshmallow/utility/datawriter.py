@@ -4,7 +4,7 @@ import csv
 import logging
 from dataclasses import dataclass
 
-from marshmallow.adt.person import Person
+from marshmallow.models import GuildPerson
 
 logger = logging.getLogger("marshmallow")
 
@@ -13,11 +13,11 @@ logger = logging.getLogger("marshmallow")
 class DataWriter:
     """This class is responsible for writing data to output."""
 
-    def write_assignment_report(self, people: list[Person], csv_name: str) -> None:
+    def write_assignment_report(self, people: list[GuildPerson], csv_name: str) -> None:
         """Writes the metrics to a csv file.
 
         Args:
-            people (list[Person]): The people assigned roles.
+            people (list[GuildPerson]): The people assigned roles.
             csv_name (str): The name of csv file.
         """
         with open(f"assignments/{csv_name}report.csv", "w") as csv_file:
