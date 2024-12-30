@@ -79,17 +79,10 @@ async def is_valid_assignment(ctx: commands.Context, assignment_group: str) -> b
 
 
 class Assignment(commands.Cog):
-    """Cog for Role Assignment Commands.
-
-    Holds the assign command.
-    Holds the report_assignments command.
-
-    Attributes:
-        bot (commands.Bot): The bot.
-    """
+    """A cog for role assignment commands."""
 
     def __init__(self, bot: commands.Bot) -> None:
-        """Instantiates the Assignment Cog."""
+        """Instantiates the Assignment cog."""
         self.bot: commands.Bot = bot
         "The cog's associated bot client."
         self.lock = asyncio.Lock()
@@ -190,8 +183,6 @@ class Assignment(commands.Cog):
         embed = du.get_assignment_summary_embed(ctx, *pr.get_assignment_counts(people))
         await ctx.send(embed=embed)
 
-        return
-
     @commands.hybrid_command()
     @commands.guild_only()
     @commands.has_any_role(*stg.get_admin_roles())
@@ -218,8 +209,6 @@ class Assignment(commands.Cog):
         )
 
         await ctx.send(embed=du.get_failed_assignments_embed(assignment_group))
-
-        return
 
 
 async def setup(bot: commands.Bot) -> None:

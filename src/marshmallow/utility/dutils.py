@@ -15,6 +15,7 @@ class DateTimeConverter:
         return dt.datetime.strptime(s, "%m/%d/%y %I:%M%p").astimezone(dt.UTC)
 
 
+# TODO: Maybe use factory design pattern?
 def get_basic_embed(title: str | None = None, description: str | None = None) -> Embed:
     """Returns a basic discord embed.
 

@@ -26,7 +26,7 @@ class TokenNotFoundError(Exception):
         super().__init__("Token Not Found.")
 
 
-def __check_token(token: str | None) -> str:
+def _check_token(token: str | None) -> str:
     if not token:
         raise TokenNotFoundError()
     return token
@@ -39,15 +39,15 @@ def get_token() -> str:
         str: The bot token.
 
     Raises:
-        ValueError: Token not found.
+        TokeNotFoundError: If no token is found.
     """
     load_dotenv()
 
     try:
         token = os.getenv("DISCORD_TOKEN")
-        token = __check_token(token)
+        token = _check_token(token)
 
-    except ValueError:
+    except TokenNotFoundError:
         logger.exception("Exception: Token Not Found.")
         sys.exit(1)
 
@@ -68,7 +68,6 @@ def get_cog_names() -> set[str]:
     return cogs
 
 
-# TODO: Convert to bot_check
 def get_admin_roles() -> list[str]:
     """Returns admin role names.
 
@@ -88,7 +87,7 @@ def get_admin_roles() -> list[str]:
     ]
 
 
-def get_logging_config() -> dict:
+def _get_logging_config() -> dict:
     """Returns bot's logging configuration as a dictionary.
 
     Returns:
@@ -104,6 +103,12 @@ def get_logging_config() -> dict:
             logger.exception("YAML Error")
 
     return config
+
+
+def configure_logging() -> None:
+    """Configures logging."""
+    config = _get_logging_config()
+    logging.config.dictConfig(config)
 
 
 def get_command_prefix() -> str:
@@ -156,7 +161,6 @@ def get_intents() -> discord.Intents:
     return intents
 
 
-# TODO: Create another bot check from this
 @unique
 class Server(IntEnum):
     """A Server Class to Store Relevant Guild IDs."""

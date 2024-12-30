@@ -31,38 +31,38 @@ def is_name_match(aliases: list[str], alg_names: list[str]) -> bool:
     return False
 
 
-def __clean_name(name: str) -> str:
+def _clean_name(name: str) -> str:
     """Strips name of whitespace, non-alphabetical characters and makes it lowercase.
 
     Args:
-        name (str): name
+        name (str): The name to clean.
 
     Returns:
-        str: cleaned name
+        str: The cleaned name.
     """
     return re.sub(r"[^a-zA-Z]", "", name).lower()
 
 
-def __clean_aliases(aliases: list[str]) -> list[str]:
+def _clean_aliases(aliases: list[str]) -> list[str]:
     """Returns clean aliases.
 
     Args:
-        aliases (list[str]): unclean aliases
+        aliases (list[str]): The aliases to clean.
 
     Returns:
-        list[str]: clean aliases
+        list[str]: The clean aliases.
     """
-    return [__clean_name(alias) for alias in aliases]
+    return [_clean_name(alias) for alias in aliases]
 
 
-def __get_member_aliases(member: discord.Member) -> list[str]:
-    """Returns all clean names/aliases associated with guild member.
+def _get_member_aliases(member: discord.Member) -> list[str]:
+    """Returns all clean names associated with guild member.
 
     Args:
-        member (discord.Member): The Guild Member.
+        member (discord.Member): The guild member.
 
     Returns:
-        list[str]: The Member's clean Aliases.
+        list[str]: The guild member's clean aliases.
     """
     aliases = set()
 
@@ -74,7 +74,7 @@ def __get_member_aliases(member: discord.Member) -> list[str]:
 
     aliases.add(member.name)
 
-    return __clean_aliases(list(aliases))
+    return _clean_aliases(list(aliases))
 
 
 def get_member_alias_map(
@@ -88,7 +88,7 @@ def get_member_alias_map(
     Returns:
         dict: Mapping of members to aliases.
     """
-    return {member: __get_member_aliases(member) for member in members}
+    return {member: _get_member_aliases(member) for member in members}
 
 
 def get_assignment_counts(people: list[GuildPerson]) -> tuple[int, int]:

@@ -18,18 +18,10 @@ logger = logging.getLogger("commands")
 
 
 class Information(commands.Cog):
-    """Cog for information-related commands.
-
-    Holds the about command.
-    Holds the info command.
-    Holds the get_channel_activity command.
-
-    Attributes:
-        bot (commands.Bot): The bot.
-    """
+    """Cog for information-related commands."""
 
     def __init__(self, bot: commands.Bot) -> None:
-        """Instantiates the Information Cog."""
+        """Instantiates the Information cog."""
         self.bot = bot
         "The cog's associated bot client."
         self.writer: DataWriter = DataWriter()
@@ -119,6 +111,7 @@ class Information(commands.Cog):
 
         return
 
+    # TODO: Add Embed Displaying Results
     @commands.hybrid_command()
     @commands.guild_only()
     @commands.has_any_role(*stg.get_admin_roles())
@@ -129,7 +122,7 @@ class Information(commands.Cog):
         start: du.DateTimeConverter,
         end: du.DateTimeConverter,
     ) -> None:
-        """Maps people's daily message activity in channel from start date.
+        """Writes message count from start to end date.
 
         Args:
             ctx (commands.Context): The command context.

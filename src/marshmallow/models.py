@@ -28,8 +28,9 @@ class GuildPerson:
     """This represents a person matched to a guild member."""
 
     info: Information
-    "The guild person's information."
+    "The person's information."
     guild_member: discord.Member | None = None
+    "The guild member associated with the person."
 
     def set_guild_member(
         self,
@@ -58,6 +59,7 @@ class GuildPerson:
                 self.guild_member = member
                 return
 
+    # TODO: Remove Override Role Logic
     def set_guild_roles(self, override_role: discord.Role | None) -> None:
         """Sets person's designated guild roles based on role_names.
 
@@ -103,14 +105,6 @@ class GuildPerson:
         """
         return self.guild_member.name if self.guild_member else None
 
-    def get_role_names_string(self) -> str:
-        """Returns person's designated roles as a single string.
-
-        Returns:
-            str: The person's designated roles.
-        """
-        return ", ".join(self.info.role_names if self.info.role_names else [])
-
     async def assign_roles(self, ctx: commands.Context) -> None:
         """Assigns person's guild member their designated roles if possible.
 
@@ -145,19 +139,10 @@ class GuildPerson:
             "full_name": self.info.full_name,
             "display_name": self.get_display_name(),
             "username": self.get_username(),
-            "discord_roles": self.get_role_names_string(),
+            "discord_roles": self.info.role_names,
             "email": self.info.email,
             "found": bool(self.guild_member),
         }
-
-    def __str__(self) -> str:
-        """Returns a string representation of a Person."""
-        return f"""
-{self.info.full_name}
-{self.get_display_name()}
-{self.info.email}
-{self.info.role_names}
-"""
 
 
 if __name__ == "__main__":

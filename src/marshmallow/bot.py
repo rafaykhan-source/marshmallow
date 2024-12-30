@@ -22,16 +22,10 @@ logger = logging.getLogger(__name__)
 
 
 class MarshmallowBotClient(commands.Bot):
-    """Marshmallow Bot Client.
-
-    Subclasses commands.Bot.
-    Standardizes bot configuration.
-    Handles and loads all cogs via the setup_hook event.
-    Handles the on_ready event.
-    """
+    """This class contains behavior unique to Marshmallow."""
 
     def __init__(self) -> None:
-        """Instantiates Marshmallow Bot Client."""
+        """Instantiates the bot client."""
         super().__init__(
             command_prefix=stg.get_command_prefix(),
             intents=stg.get_intents(),

@@ -17,20 +17,10 @@ logger = logging.getLogger("commands")
 
 
 class Development(commands.Cog):
-    """Cog for development commands.
-
-    Holds the sync command.
-    Holds the load command.
-    Holds the unload command.
-    Holds the reload command.
-    Holds the reload_all command.
-
-    Attributes:
-        bot (commands.Bot): The bot.
-    """
+    """Cog for development commands."""
 
     def __init__(self, bot: commands.Bot) -> None:
-        """Instantiates the Development Cog."""
+        """Instantiates the development cog."""
         self.bot: commands.Bot = bot
         "The cog's associated bot client."
         self.cog_names: set[str] = stg.get_cog_names()
@@ -160,7 +150,7 @@ class Development(commands.Cog):
         )
 
         for name in self.cog_names:
-            await self.bot.reload_extension(f"extensions.{name}")
+            await self.reload(ctx, name)
         logger.info("Reloaded all Cogs.")
         await ctx.send("Reloaded all Cogs.")
 

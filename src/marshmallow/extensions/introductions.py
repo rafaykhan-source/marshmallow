@@ -19,13 +19,7 @@ logger = logging.getLogger("marshmallow")
 
 
 class Introductions(commands.Cog):
-    """Cog for Introductions.
-
-    Handles the on_member_join event.
-
-    Attributes:
-        bot (commands.Bot): The bot.
-    """
+    """Cog for introductions."""
 
     def __init__(self, bot: commands.Bot) -> None:
         """Instantiates the Introductions Cog.
