@@ -6,4 +6,6 @@ COPY . .
 
 RUN uv venv
 
+RUN uv pip install -e .
+
 CMD [ "uv", "run", "src/marshmallow" ]
