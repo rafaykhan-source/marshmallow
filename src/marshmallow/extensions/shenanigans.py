@@ -8,8 +8,6 @@ import logging
 
 from discord.ext import commands
 
-logger = logging.getLogger("commands")
-
 
 class Shenanigans(commands.Cog):
     """Cog for Shenanigans.
@@ -22,6 +20,8 @@ class Shenanigans(commands.Cog):
         """Instantiates the Shenanigans Cog."""
         self.bot: commands.Bot = bot
         "The cog's associated bot client."
+        self.logger = logging.getLogger(__name__)
+        "The cog's associated logger."
 
     @commands.hybrid_command()
     @commands.guild_only()
@@ -34,14 +34,14 @@ class Shenanigans(commands.Cog):
         if not ctx.guild:
             return
 
-        logger.info(
+        self.logger.info(
             "%s called command 'peep' in %s.",
             ctx.author.display_name,
             ctx.guild.name,
         )
 
         await ctx.send("peep!")
-        logger.info("Sent Message: peep!")
+        self.logger.info("Sent Message: peep!")
 
         return
 

@@ -15,8 +15,6 @@ import marshmallow.settings as stg
 from marshmallow.settings import Server
 from marshmallow.utility.dataproducer import DataServer
 
-logger = logging.getLogger("marshmallow")
-
 
 class Introductions(commands.Cog):
     """Cog for introductions."""
@@ -29,6 +27,8 @@ class Introductions(commands.Cog):
         """
         self.bot: commands.Bot = bot
         "The cog's associated bot client."
+        self.logger = logging.getLogger(__name__)
+        "The cog's associated logger."
         self.server: DataServer = DataServer()
         "The server of data for the cog."
         self.welcomes: dict = self.server.get_welcome_messages()
@@ -43,7 +43,7 @@ class Introductions(commands.Cog):
         Args:
             member (discord.Member): The guild joinee.
         """
-        logger.info("%s joined %s.", member.display_name, member.guild.name)
+        self.logger.info("%s joined %s.", member.display_name, member.guild.name)
         guild_id = member.guild.id
 
         match guild_id:
@@ -58,13 +58,13 @@ class Introductions(commands.Cog):
             case Server.MARSHMALLOW_DEV:
                 await member.send(self.welcomes["ebcao"])
             case _:
-                logger.warning(
+                self.logger.warning(
                     "%s joined unrecognized guild '%s'.",
                     member.display_name,
                     member.guild.name,
                 )
 
-        logger.info(
+        self.logger.info(
             "Sent welcome message to %s for joining '%s'.",
             member.display_name,
             member.guild.name,

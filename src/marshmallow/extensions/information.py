@@ -14,8 +14,6 @@ import marshmallow.settings as stg
 import marshmallow.utility.dutils as du
 from marshmallow.utility.datawriter import DataWriter
 
-logger = logging.getLogger("commands")
-
 
 class Information(commands.Cog):
     """Cog for information-related commands."""
@@ -24,6 +22,8 @@ class Information(commands.Cog):
         """Instantiates the Information cog."""
         self.bot = bot
         "The cog's associated bot client."
+        self.logger = logging.getLogger(__name__)
+        "The cog's associated logger."
         self.writer: DataWriter = DataWriter()
         "A writer for data from the cog."
 
@@ -34,7 +34,7 @@ class Information(commands.Cog):
         if not ctx.guild:
             return
 
-        logger.info(
+        self.logger.info(
             "%s called command 'about' in %s.",
             ctx.author.display_name,
             ctx.guild.name,
@@ -62,7 +62,7 @@ class Information(commands.Cog):
         )
 
         await ctx.send(file=marshmallow_icon_file, embed=embed)
-        logger.info("Sent About Message.")
+        self.logger.info("Sent About Message.")
 
         return
 
@@ -79,7 +79,7 @@ class Information(commands.Cog):
         if not ctx.guild:
             return
 
-        logger.info(
+        self.logger.info(
             "%s called command 'info' on %s in %s.",
             ctx.author.display_name,
             member.display_name,
@@ -107,7 +107,7 @@ class Information(commands.Cog):
         )
 
         await ctx.send(embed=info_embed)
-        logger.info("Sent Member Information.")
+        self.logger.info("Sent Member Information.")
 
         return
 
@@ -133,7 +133,7 @@ class Information(commands.Cog):
         if not ctx.guild:
             return
 
-        logger.info(
+        self.logger.info(
             "%s called command 'get_message_count' in %s.",
             ctx.author.display_name,
             ctx.guild.name,
@@ -174,7 +174,7 @@ class Information(commands.Cog):
         if not ctx.guild:
             return
 
-        logger.info(
+        self.logger.info(
             "%s called command 'get_voice_channel_attendees' in %s.",
             ctx.author.display_name,
             ctx.guild.name,

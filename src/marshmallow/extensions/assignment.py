@@ -17,8 +17,6 @@ from marshmallow.settings import Server
 from marshmallow.utility.dataproducer import DataServer
 from marshmallow.utility.datawriter import DataWriter
 
-logger = logging.getLogger("assign")
-
 
 async def is_valid_assignment(ctx: commands.Context, assignment_group: str) -> bool:  # noqa
     """Returns validity of assign command call.
@@ -85,6 +83,8 @@ class Assignment(commands.Cog):
         """Instantiates the Assignment cog."""
         self.bot: commands.Bot = bot
         "The cog's associated bot client."
+        self.logger = logging.getLogger(__name__)
+        "The cog's associated logger."
         self.lock = asyncio.Lock()
         "The cog's lock."
         self.assign_cache: dict[str, commands.Context] = {}
@@ -151,7 +151,7 @@ class Assignment(commands.Cog):
         if not ctx.guild:
             return
 
-        logger.info(
+        self.logger.info(
             "%s called command 'assign' for %s in %s.",
             ctx.author.display_name,
             assignment_group,
@@ -168,15 +168,15 @@ class Assignment(commands.Cog):
         for person in people:
             person.set_guild_member(member_alias_map)
             person.set_guild_roles(role)
-        logger.info("Mapped People to Guild Members and Designated Guild Roles.")
+        self.logger.info("Mapped People to Guild Members and Designated Guild Roles.")
 
-        logger.info("Starting Role Assignments.")
+        self.logger.info("Starting Role Assignments.")
         await ctx.send("*Starting Role Assignments.*")
 
         for person in people:
             await person.assign_roles(ctx)
 
-        logger.info("Finished Role Assignments.")
+        self.logger.info("Finished Role Assignments.")
         await ctx.send("*Finished Role Assignments.*")
 
         self.writer.write_assignment_report(people, assignment_group)
@@ -201,7 +201,7 @@ class Assignment(commands.Cog):
         if not ctx.guild:
             return
 
-        logger.info(
+        self.logger.info(
             "%s called command 'assign' for %s in %s.",
             ctx.author.display_name,
             assignment_group,

@@ -17,8 +17,6 @@ from marshmallow.utility.dataproducer import DataServer
 if TYPE_CHECKING:
     import discord
 
-logger = logging.getLogger("assign")
-
 
 class Auto(commands.Cog):
     """Cog for Auto Assignment Specific Commands.
@@ -33,6 +31,8 @@ class Auto(commands.Cog):
         """Instantiates the Auto Cog."""
         self.bot: commands.Bot = bot
         "The cog's associated bot client."
+        self.logger = logging.getLogger(__name__)
+        "The cog's associated logger."
         self.nations: set[str] = {
             "Metal Clan",
             "Air Nomads",
@@ -81,7 +81,7 @@ class Auto(commands.Cog):
         if not ctx.guild:
             return
 
-        logger.info(
+        self.logger.info(
             "%s called command 'assign_nations' in %s.",
             ctx.author.display_name,
             ctx.guild.name,
@@ -89,7 +89,7 @@ class Auto(commands.Cog):
         guild = ctx.guild
 
         if guild.id not in [Server.FSI_ONLINE, Server.MARSHMALLOW_DEV]:
-            logger.debug(
+            self.logger.debug(
                 "'/assign_nations' command was called in incorrect guild: %s",
                 guild.name,
             )
@@ -105,7 +105,7 @@ class Auto(commands.Cog):
                 list(self.group_to_nation.keys()),
             )
 
-        logger.info("Starting Nation Role Assignments.")
+        self.logger.info("Starting Nation Role Assignments.")
         await ctx.send("*Starting Nation Role Assignments.*")
 
         for group_name, group_role in self.group_map.items():
@@ -119,14 +119,14 @@ class Auto(commands.Cog):
 
             for m in group_role.members:
                 if nation_role in m.roles:
-                    logger.info("%s already assigned %s.", m.name, nation_name)
+                    self.logger.info("%s already assigned %s.", m.name, nation_name)
                     continue
 
                 await m.add_roles(nation_role)
-                logger.info("%s was assigned %s.", m.name, nation_name)
+                self.logger.info("%s was assigned %s.", m.name, nation_name)
                 await ctx.send(f"{m.display_name} was assigned {nation_name}.")
 
-        logger.info("Finished Nation Role Assignments.")
+        self.logger.info("Finished Nation Role Assignments.")
         await ctx.send("*Finished Nation Role Assignments.*")
 
         return
@@ -144,7 +144,7 @@ class Auto(commands.Cog):
         if not ctx.guild:
             return
 
-        logger.info(
+        self.logger.info(
             "%s called command 'assign_affinity' in %s.",
             ctx.author.display_name,
             ctx.guild.name,

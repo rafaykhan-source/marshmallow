@@ -25,14 +25,6 @@ handlers:
     maxBytes: 524288 #.5MB
     backupCount: 3
     encoding: utf8
-  assignHandler:
-    class: logging.handlers.RotatingFileHandler
-    level: DEBUG
-    formatter: default
-    filename: logs/assign.log
-    maxBytes: 524288 #.5MB
-    backupCount: 3
-    encoding: utf8
 loggers:
   run:
     level: DEBUG
@@ -45,10 +37,6 @@ loggers:
   commands:
     level: DEBUG
     handlers: [commandsHandler]
-    propagate: no
-  assign:
-    level: DEBUG
-    handlers: [assignHandler]
     propagate: no
 root:
   level: DEBUG

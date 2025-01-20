@@ -13,8 +13,6 @@ from discord.ext import commands
 import marshmallow.settings as stg
 from marshmallow.settings import Server
 
-logger = logging.getLogger("commands")
-
 
 class Development(commands.Cog):
     """Cog for development commands."""
@@ -23,6 +21,8 @@ class Development(commands.Cog):
         """Instantiates the development cog."""
         self.bot: commands.Bot = bot
         "The cog's associated bot client."
+        self.logger = logging.getLogger(__name__)
+        "The cog's associated logger."
         self.cog_names: set[str] = stg.get_cog_names()
         "The cogs of the bot."
 
@@ -38,18 +38,18 @@ class Development(commands.Cog):
         if not ctx.guild:
             return
 
-        logger.info(
+        self.logger.info(
             "%s called command 'sync' in %s.",
             ctx.author.display_name,
             ctx.guild.name,
         )
         if ctx.guild.id != Server.MARSHMALLOW_DEV:
-            logger.warning("'sync' command was called in incorrect guild.")
+            self.logger.warning("'sync' command was called in incorrect guild.")
             await ctx.send("Wrong Server.")
             return
 
         await self.bot.tree.sync()
-        logger.info("Synced Slash Commands.")
+        self.logger.info("Synced Slash Commands.")
         await ctx.send("Synced Guild Slash Commands.")
 
         return
@@ -67,7 +67,7 @@ class Development(commands.Cog):
         if not ctx.guild or cog_name not in self.cog_names:
             await ctx.send(f"{cog_name} is not in cogs.")
             return
-        logger.info(
+        self.logger.info(
             "%s called command 'reload' for %s in %s.",
             ctx.author.display_name,
             cog_name,
@@ -75,7 +75,7 @@ class Development(commands.Cog):
         )
 
         await self.bot.reload_extension(f"extensions.{cog_name}")
-        logger.info("Reloaded Cog: %s", cog_name)
+        self.logger.info("Reloaded Cog: %s", cog_name)
         await ctx.send(f'"*{cog_name}*" Cog Reloaded.')
 
         return
@@ -93,7 +93,7 @@ class Development(commands.Cog):
         if not ctx.guild or cog_name not in self.cog_names:
             await ctx.send(f"{cog_name} is not in cogs.")
             return
-        logger.info(
+        self.logger.info(
             "%s called command 'load' for %s in %s.",
             ctx.author.display_name,
             cog_name,
@@ -101,7 +101,7 @@ class Development(commands.Cog):
         )
 
         await self.bot.load_extension(f"extensions.{cog_name}")
-        logger.info("Loaded Cog: %s", cog_name)
+        self.logger.info("Loaded Cog: %s", cog_name)
         await ctx.send(f'"*{cog_name}*" Cog Loaded.')
 
         return
@@ -119,7 +119,7 @@ class Development(commands.Cog):
         if not ctx.guild or cog_name not in self.cog_names:
             await ctx.send(f"{cog_name} is not in cogs.")
             return
-        logger.info(
+        self.logger.info(
             "%s called command 'unload' for %s in %s.",
             ctx.author.display_name,
             cog_name,
@@ -127,7 +127,7 @@ class Development(commands.Cog):
         )
 
         await self.bot.unload_extension(f"extensions.{cog_name}")
-        logger.info("Unloaded Cog: %s", cog_name)
+        self.logger.info("Unloaded Cog: %s", cog_name)
         await ctx.send(f'"*{cog_name}*" Cog Unloaded.')
 
         return
@@ -143,7 +143,7 @@ class Development(commands.Cog):
         """
         if not ctx.guild:
             return
-        logger.info(
+        self.logger.info(
             "%s called command 'reloadall' in %s.",
             ctx.author.display_name,
             ctx.guild.name,
@@ -151,7 +151,7 @@ class Development(commands.Cog):
 
         for name in self.cog_names:
             await self.reload(ctx, name)
-        logger.info("Reloaded all Cogs.")
+        self.logger.info("Reloaded all Cogs.")
         await ctx.send("Reloaded all Cogs.")
 
         return

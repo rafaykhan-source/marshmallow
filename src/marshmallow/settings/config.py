@@ -61,9 +61,11 @@ def get_cog_names() -> set[str]:
         set[str]: The cog names.
     """
     cogs = set()
-    for file in os.listdir("src/marshmallow/extensions/"):
-        if file.endswith(".py"):
-            cogs.add(file[:-3])
+    for f in os.listdir("src/marshmallow/extensions/"):
+        if "__" in f:
+            continue
+        if f.endswith(".py"):
+            cogs.add(f[:-3])
 
     return cogs
 
