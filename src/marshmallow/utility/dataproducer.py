@@ -8,16 +8,20 @@ custom models.
 import csv
 import json
 import logging
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from marshmallow.models import GuildPerson, Information
-
-logger = logging.getLogger("utility")
 
 
 @dataclass
 class DataServer:
     """This class is responsible for reading and serving data to Marshmallow."""
+
+    logger: logging.Logger = field(init=False)
+
+    def __post_init__(self) -> None:
+        """Acquires logger for the DataServer."""
+        self.logger = logging.getLogger(__name__)
 
     def get_people(self, group: str) -> list[GuildPerson]:
         """Returns the people associated with the group.
@@ -29,7 +33,7 @@ class DataServer:
             list[GuildPerson]: The people associated with the group.
         """
         with open(f"data/{group}.csv") as csv_file:
-            logger.info("Retrieved People of %s.", group)
+            self.logger.info("Retrieved People of %s.", group)
             reader = csv.DictReader(csv_file)
             return [
                 GuildPerson(
@@ -50,7 +54,7 @@ class DataServer:
             list[dict]: The affinity group people.
         """
         with open("data/affinity.csv") as csv_file:
-            logger.info("Retrieved Affinity People.")
+            self.logger.info("Retrieved Affinity People.")
             reader = csv.DictReader(csv_file)
             return [
                 GuildPerson(

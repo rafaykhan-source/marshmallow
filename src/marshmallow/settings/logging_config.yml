@@ -17,14 +17,6 @@ handlers:
     maxBytes: 524288 #.5MB
     backupCount: 3
     encoding: utf8
-  utilityHandler:
-    class: logging.handlers.RotatingFileHandler
-    level: DEBUG
-    formatter: default
-    filename: logs/utility.log
-    maxBytes: 524288 #.5MB
-    backupCount: 3
-    encoding: utf8
   commandsHandler:
     class: logging.handlers.RotatingFileHandler
     level: DEBUG
@@ -49,10 +41,6 @@ loggers:
   marshmallow:
     level: DEBUG
     handlers: [marshHandler]
-    propagate: no
-  utility:
-    level: DEBUG
-    handlers: [utilityHandler]
     propagate: no
   commands:
     level: DEBUG

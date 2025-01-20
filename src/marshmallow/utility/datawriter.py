@@ -2,16 +2,20 @@
 
 import csv
 import logging
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from marshmallow.models import GuildPerson
-
-logger = logging.getLogger("marshmallow")
 
 
 @dataclass
 class DataWriter:
     """This class is responsible for writing data to output."""
+
+    logger: logging.Logger = field(init=False)
+
+    def __post_init__(self) -> None:
+        """Acquires logger for the DataWriter."""
+        self.logger = logging.getLogger(__name__)
 
     def write_assignment_report(self, people: list[GuildPerson], csv_name: str) -> None:
         """Writes the metrics to a csv file.
@@ -35,7 +39,7 @@ class DataWriter:
             for p in people:
                 writer.writerow(p.get_metrics())
 
-            logger.info("Wrote '%s' Assignment Report.", csv_name)
+            self.logger.info("Wrote '%s' Assignment Report.", csv_name)
 
     def write_message_counts(self, message_counts: dict, csv_name: str) -> None:
         """Writes the message counts to a csv file.
@@ -48,6 +52,8 @@ class DataWriter:
             w = csv.writer(f)
             w.writerow(("name", "username", "count"))
             w.writerows([(*person, count) for person, count in message_counts.items()])
+
+        self.logger.info("Wrote '%s' Message Report.", csv_name)
 
 
 if __name__ == "__main__":
