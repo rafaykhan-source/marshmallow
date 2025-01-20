@@ -9,8 +9,6 @@ from discord.ext import commands
 
 import marshmallow.utility.processor as pr
 
-logger = logging.getLogger("assign")
-
 
 @dataclass(frozen=True)
 class Information:
@@ -31,6 +29,11 @@ class GuildPerson:
     "The person's information."
     guild_member: discord.Member | None = None
     "The guild member associated with the person."
+    logger: logging.Logger = field(init=None)
+
+    def __post_init__(self) -> None:
+        """Acquires logger for the GuildPerson."""
+        self.logger = logging.getLogger(__name__)
 
     def set_guild_member(
         self,
@@ -45,11 +48,11 @@ class GuildPerson:
             members_to_aliases (dict): Mapping between guild members and their aliases.
         """
         if not isinstance(members_to_aliases, dict):
-            logger.error("Argument members_to_aliases is not of type dict.")
+            self.logger.error("Argument members_to_aliases is not of type dict.")
             return
 
         if not self.info.alg_names:
-            logger.info(
+            self.logger.info(
                 "Cannot set associated guild member when person has no alg_names.",
             )
             return
@@ -67,11 +70,11 @@ class GuildPerson:
             override_role (discord.Role | None): A specific role to assign.
         """
         if not isinstance(override_role, discord.Role | type(None)):
-            logger.error("Argument role is not of type discord.Role or NoneType.")
+            self.logger.error("Argument role is not of type discord.Role or NoneType.")
             return
 
         if not self.guild_member:
-            logger.info("Cannot set guild roles for unidentifiable person.")
+            self.logger.info("Cannot set guild roles for unidentifiable person.")
             return
 
         self.guild_roles = []
@@ -114,20 +117,31 @@ class GuildPerson:
             ctx (commands.Context): The command call context object.
         """
         if not self.guild_member:
-            logger.info("%s could not be found on the server.", self.info.full_name)
+            self.logger.info(
+                "%s could not be found on the server.",
+                self.info.full_name,
+            )
             return
 
         if not self.guild_roles:
-            logger.warning("Guild Roles is None.")
+            self.logger.warning("Guild Roles is None.")
             return
 
         for role in self.guild_roles:
             if role in self.guild_member.roles:
-                logger.info("%s already has role %s.", self.info.full_name, role.name)
+                self.logger.info(
+                    "%s already has role %s.",
+                    self.info.full_name,
+                    role.name,
+                )
             else:
                 await self.guild_member.add_roles(role)
                 await ctx.send(f"{self.info.full_name} was newly assigned {role.name}")
-                logger.info("%s was newly assigned %s.", self.info.full_name, role.name)
+                self.logger.info(
+                    "%s was newly assigned %s.",
+                    self.info.full_name,
+                    role.name,
+                )
 
     def get_metrics(self) -> dict:
         """Returns the metrics associated with a person.
