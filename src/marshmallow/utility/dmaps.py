@@ -5,7 +5,7 @@ import logging
 import discord
 from discord.ext import commands
 
-logger = logging.getLogger("utility")
+logger = logging.getLogger(__name__)
 
 
 async def get_channel_map(
@@ -29,8 +29,10 @@ async def get_channel_map(
         )
         if not guild_channel:
             logger.warning("No associated guild channel with %s.", channel)
+            print(channel)
         channel_map[channel] = guild_channel
 
+    print([c.name for c in list(channel_map.values())])
     return channel_map
 
 

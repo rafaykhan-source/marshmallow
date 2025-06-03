@@ -158,6 +158,7 @@ class Auto(commands.Cog):
             "💬│fli-black",
             "💬│fli-christian",
             "💬│fli-latine",
+            "💬│fli-mena",
             "💬│fli-women-femmes-of-color",
             "💬│fli-ability",
             "💬│fli-transfer-and-vets",
@@ -167,6 +168,7 @@ class Auto(commands.Cog):
             "💬│fli-foster",
             "fli-rural-lead",
             "fli-muslim-lead",
+            "fli-mena-lead",
             "fli-apida-lead",
             "fli-black-lead",
             "fli-christian-lead",
@@ -197,6 +199,8 @@ class Auto(commands.Cog):
             management = self.bot.get_cog("Management")
             for ch in channels:
                 await management.grant_channel_access(ctx, member, ch)
+
+        await ctx.send("Affinity Assignments Completed.")
 
 
 async def setup(bot: commands.Bot) -> None:
