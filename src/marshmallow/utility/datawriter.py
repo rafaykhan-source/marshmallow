@@ -32,6 +32,7 @@ class DataWriter:
                 "discord_roles",
                 "email",
                 "found",
+                "aliases",
             ]
             writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
 

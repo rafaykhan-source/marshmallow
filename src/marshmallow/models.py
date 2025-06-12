@@ -156,6 +156,7 @@ class GuildPerson:
             "discord_roles": self.info.role_names,
             "email": self.info.email,
             "found": bool(self.guild_member),
+            "aliases": self.info.alg_names,
         }
 
 
