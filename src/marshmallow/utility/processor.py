@@ -65,16 +65,20 @@ def _get_member_aliases(member: discord.Member) -> list[str]:
         list[str]: The guild member's clean aliases.
     """
     aliases = set()
+    res = []
+
+    aliases.add(member.name)
+    res.append(member.name)
 
     if hasattr(member, "global_name") and member.global_name:
         aliases.add(member.global_name)
+        res.append(member.global_name)
 
     if member.nick:
         aliases.add(member.nick)
+        res.append(member.nick)
 
-    aliases.add(member.name)
-
-    return _clean_aliases(list(aliases))
+    return [*res, *_clean_aliases(list(aliases))]
 
 
 def get_member_alias_map(
