@@ -77,15 +77,10 @@ def get_admin_roles() -> list[str]:
         list[str]: The admin role names.
     """
     return [
-        "EBCAO Discord Admin",
-        "SIFP Discord Admin",
-        "FSI Discord Admin",
-        "Tech CA",
-        "Admin",
-        "RCA",
-        "VCA",
-        "VGS",
-        "RGS",
+        "Tech Admin",
+        "Alumni Admin",
+        "Virtual Advisor",
+        "Residential Advisor",
     ]
 
 
