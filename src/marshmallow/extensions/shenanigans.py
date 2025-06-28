@@ -31,9 +31,6 @@ class Shenanigans(commands.Cog):
         Args:
             ctx (commands.Context): The command context.
         """
-        if not ctx.guild:
-            return
-
         self.logger.info(
             "%s called command 'peep' in %s.",
             ctx.author.display_name,
@@ -42,8 +39,6 @@ class Shenanigans(commands.Cog):
 
         await ctx.send("peep!")
         self.logger.info("Sent Message: peep!")
-
-        return
 
 
 async def setup(bot: commands.Bot) -> None:

@@ -75,15 +75,10 @@ class Introductions(commands.Cog):
     @commands.has_any_role(*stg.get_admin_roles())
     async def test_join(self, ctx: commands.Context) -> None:
         """Tests on_member_join event."""
-        if not ctx.guild:
-            return
-
         if not isinstance(ctx.author, discord.Member):
             return
 
         await self.on_member_join(ctx.author)
-
-        return
 
 
 async def setup(bot: commands.Bot) -> None:

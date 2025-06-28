@@ -35,9 +35,6 @@ class Development(commands.Cog):
         Args:
             ctx (commands.Context): The command context.
         """
-        if not ctx.guild:
-            return
-
         self.logger.info(
             "%s called command 'sync' in %s.",
             ctx.author.display_name,
@@ -51,8 +48,6 @@ class Development(commands.Cog):
         await self.bot.tree.sync()
         self.logger.info("Synced Slash Commands.")
         await ctx.send("Synced Guild Slash Commands.")
-
-        return
 
     @commands.hybrid_command()
     @commands.guild_only()
@@ -78,8 +73,6 @@ class Development(commands.Cog):
         self.logger.info("Reloaded Cog: %s", cog_name)
         await ctx.send(f'"*{cog_name}*" Cog Reloaded.')
 
-        return
-
     @commands.hybrid_command()
     @commands.guild_only()
     @commands.has_any_role(*stg.get_admin_roles())
@@ -103,8 +96,6 @@ class Development(commands.Cog):
         await self.bot.load_extension(f"extensions.{cog_name}")
         self.logger.info("Loaded Cog: %s", cog_name)
         await ctx.send(f'"*{cog_name}*" Cog Loaded.')
-
-        return
 
     @commands.hybrid_command()
     @commands.guild_only()
@@ -130,9 +121,7 @@ class Development(commands.Cog):
         self.logger.info("Unloaded Cog: %s", cog_name)
         await ctx.send(f'"*{cog_name}*" Cog Unloaded.')
 
-        return
-
-    @commands.hybrid_command(name="reloadall")
+    @commands.hybrid_command()
     @commands.guild_only()
     @commands.has_any_role(*stg.get_admin_roles())
     async def reload_all(self, ctx: commands.Context) -> None:
@@ -153,8 +142,6 @@ class Development(commands.Cog):
             await self.reload(ctx, name)
         self.logger.info("Reloaded all Cogs.")
         await ctx.send("Reloaded all Cogs.")
-
-        return
 
 
 async def setup(bot: commands.Bot) -> None:

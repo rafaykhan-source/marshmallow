@@ -13,20 +13,6 @@ import marshmallow.settings as stg
 import marshmallow.utility.dchannels as dch
 
 
-def generate_names(base_name: str, start: int, end: int) -> list[str]:
-    """Generates names from base name across start and end range.
-
-    Args:
-        base_name (str): The shared base name.
-        start (int): The range start.
-        end (int): The range end.
-
-    Returns:
-        list[str]: The names across the range.
-    """
-    return [f"{base_name}{i}" for i in range(start, end)]
-
-
 async def log_send(ctx: commands.Context, logger: logging.Logger, msg: str) -> None:
     """Logs Message and Sends it to the Guild.
 
@@ -41,12 +27,6 @@ async def log_send(ctx: commands.Context, logger: logging.Logger, msg: str) -> N
 
 class Management(commands.Cog):
     """Cog for Server Management Commands.
-
-    Holds the delete_channels command.
-    Holds the delete_roles command.
-    Holds the delete_category command.
-    Holds the copy_role command.
-    Holds the clone_channels command.
 
     Attributes:
         bot (commands.Bot): The bot.
@@ -64,20 +44,17 @@ class Management(commands.Cog):
     @commands.guild_only()
     @commands.has_any_role(*stg.get_admin_roles())
     @commands.has_permissions(manage_channels=True)
-    async def delete_channels(self, ctx: commands.Context, base_name: str) -> None:
-        """Deletes all channels with 'base_name' as a substring of the channel name.
+    async def delete_channels(self, ctx: commands.Context, substring: str) -> None:
+        """Deletes all channels with 'substring' in their channel names.
 
         Args:
             ctx (commands.Context): The command context.
-            base_name (str): The shared based name of the channels.
+            substring (str): The substring for channel deletion.
         """
-        if not ctx.guild:
-            return
-
         self.logger.info(
-            "%s called command 'delete_channels' with base name '%s' in %s.",
+            "%s called command 'delete_channels' with substring '%s' in %s.",
             ctx.author.display_name,
-            base_name,
+            substring,
             ctx.guild.name,
         )
         channels = ctx.guild.channels
@@ -85,20 +62,18 @@ class Management(commands.Cog):
         await log_send(
             ctx,
             self.logger,
-            f"Deleting channels with base name: *{base_name}*",
+            f"Deleting all channels with substring: *{substring}*.",
         )
         for ch in channels:
-            if base_name in ch.name:
+            if substring in ch.name:
                 await ch.delete()
-                await log_send(ctx, f"Deleted Channel: *{ch.name}*")
+                await log_send(ctx, self.logger, f"Deleted Channel: *{ch.name}*")
 
         await log_send(
             ctx,
             self.logger,
-            f"Deleted channels with base name: *{base_name}*",
+            f"Deleted channels with base name: *{substring}*",
         )
-
-        return
 
     @commands.hybrid_command()
     @commands.guild_only()
@@ -109,15 +84,12 @@ class Management(commands.Cog):
         ctx: commands.Context,
         category: discord.CategoryChannel,
     ) -> None:
-        """Deletes the specified category and subsequent channels.
+        """Deletes the specified category and its channels.
 
         Args:
             ctx (commands.Context): The command context.
             category (discord.CategoryChannel): The category to delete.
         """
-        if not ctx.guild:
-            return
-
         self.logger.info(
             "%s called command 'delete_category' for '%s' in %s.",
             ctx.author.display_name,
@@ -143,20 +115,17 @@ class Management(commands.Cog):
     @commands.guild_only()
     @commands.has_any_role(*stg.get_admin_roles())
     @commands.has_permissions(manage_roles=True)
-    async def delete_roles(self, ctx: commands.Context, base_name: str) -> None:
-        """Deletes all roles with 'base_name' as a substring of the role name.
+    async def delete_roles(self, ctx: commands.Context, substring: str) -> None:
+        """Deletes all roles with 'substring' in their role names.
 
         Args:
             ctx (commands.Context): The command context.
-            base_name (str): The shared base name of the roles.
+            substring (str): The substring for role deletion.
         """
-        if not ctx.guild:
-            return
-
         self.logger.info(
-            "%s called command 'delete_roles' with base name '%s' in %s.",
+            "%s called command 'delete_roles' with substring '%s' in %s.",
             ctx.author.display_name,
-            base_name,
+            substring,
             ctx.guild.name,
         )
         roles = ctx.guild.roles
@@ -164,15 +133,15 @@ class Management(commands.Cog):
         await log_send(
             ctx,
             self.logger,
-            f"Deleting all roles with base name: *{base_name}*",
+            f"Deleting all roles with base name: *{substring}*",
         )
 
         for r in roles:
-            if base_name in r.name:
+            if substring in r.name:
                 await r.delete()
                 await log_send(ctx, self.logger, f"Deleted Role: *{r.name}*")
 
-        await log_send(ctx, f"Deleted all roles with base name: *{base_name}*")
+        await log_send(ctx, f"Deleted all roles with base name: *{substring}*")
 
     @commands.hybrid_command()
     @commands.guild_only()
@@ -186,7 +155,7 @@ class Management(commands.Cog):
         start: int,
         end: int,
     ) -> None:
-        """Clones channels across start to end range (inclusive).
+        """Clones channels across start to end range (exclusive).
 
         Args:
             ctx (commands.Context): The command context.
@@ -194,11 +163,8 @@ class Management(commands.Cog):
             from.
             base_name (str): The shared base name of the channels.
             start (int): The clone range start.
-            end (int): The clone range end (inclusive).
+            end (int): The clone range end (exclusive).
         """
-        if not ctx.guild:
-            return
-
         self.logger.info(
             "%s called command 'clone_channels' on %s with base name '%s' across %d to %d in %s.",  # noqa: E501
             ctx.author.display_name,
@@ -211,9 +177,10 @@ class Management(commands.Cog):
 
         await log_send(
             ctx,
+            self.logger,
             f"Cloning Channels: *{base_name}{start} -> {end}*",
         )
-        channel_names = generate_names(base_name, start, end + 1)
+        channel_names = [f"{base_name}{i}" for i in range(start, end)]
 
         for name in channel_names:
             await channel.clone(name=name)
@@ -242,9 +209,6 @@ class Management(commands.Cog):
             role (discord.Role): The role to clone from.
             new_role_name (str): The name of the new role.
         """
-        if not ctx.guild:
-            return
-
         self.logger.info(
             "%s called command 'clone_role' on %s in %s.",
             ctx.author.display_name,
@@ -276,18 +240,15 @@ class Management(commands.Cog):
         start: int,
         end: int,
     ) -> None:
-        """Clones roles across start to end range (inclusive).
+        """Clones roles across start to end range (exclusive).
 
         Args:
             ctx (commands.Context): The command context.
             role (discord.Role): The role to clone from.
             base_name (str): The shared base name of the roles.
             start (int): The clone range start.
-            end (int): The clone range end (inclusive).
+            end (int): The clone range end (exclusive).
         """
-        if not ctx.guild:
-            return
-
         self.logger.info(
             "%s called command 'clone_roles' on %s with base name '%s' across %d to %d in %s.",  # noqa: E501
             ctx.author.display_name,
@@ -303,7 +264,7 @@ class Management(commands.Cog):
             self.logger,
             f"Cloning Roles: *{base_name}{start} -> {end}*",
         )
-        role_names = generate_names(base_name, start, end + 1)
+        role_names = [f"{base_name}{i}" for i in range(start, end)]
 
         for name in role_names:
             await ctx.guild.create_role(

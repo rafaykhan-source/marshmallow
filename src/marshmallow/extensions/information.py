@@ -31,9 +31,6 @@ class Information(commands.Cog):
     @commands.guild_only()
     async def about(self, ctx: commands.Context) -> None:
         """Sends Marshmallow's about message."""
-        if not ctx.guild:
-            return
-
         self.logger.info(
             "%s called command 'about' in %s.",
             ctx.author.display_name,
@@ -64,8 +61,6 @@ class Information(commands.Cog):
         await ctx.send(file=marshmallow_icon_file, embed=embed)
         self.logger.info("Sent About Message.")
 
-        return
-
     @commands.hybrid_command()
     @commands.guild_only()
     @commands.has_any_role(*stg.get_admin_roles())
@@ -76,9 +71,6 @@ class Information(commands.Cog):
             ctx (commands.Context): The command context.
             member (discord.Member): The member.
         """
-        if not ctx.guild:
-            return
-
         self.logger.info(
             "%s called command 'info' on %s in %s.",
             ctx.author.display_name,
@@ -109,8 +101,6 @@ class Information(commands.Cog):
         await ctx.send(embed=info_embed)
         self.logger.info("Sent Member Information.")
 
-        return
-
     # TODO: Add Embed Displaying Results
     @commands.hybrid_command()
     @commands.guild_only()
@@ -130,9 +120,6 @@ class Information(commands.Cog):
             start (str): Activity tracking start date, e.g. "02/15/23 12:53PM".
             end (str): Activity tracking end date "02/15/23 12:57PM".
         """
-        if not ctx.guild:
-            return
-
         self.logger.info(
             "%s called command 'get_message_count' in %s.",
             ctx.author.display_name,
@@ -171,9 +158,6 @@ class Information(commands.Cog):
             ctx (commands.Context): The context object.
             channel (discord.VoiceChannel): The desired voice channel.
         """
-        if not ctx.guild:
-            return
-
         self.logger.info(
             "%s called command 'get_voice_channel_attendees' in %s.",
             ctx.author.display_name,
@@ -181,7 +165,6 @@ class Information(commands.Cog):
         )
 
         await ctx.send(embed=du.get_people_embed(channel.members))
-        return
 
 
 async def setup(bot: commands.Bot) -> None:
