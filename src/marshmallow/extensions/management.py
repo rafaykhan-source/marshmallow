@@ -141,7 +141,11 @@ class Management(commands.Cog):
                 await r.delete()
                 await log_send(ctx, self.logger, f"Deleted Role: *{r.name}*")
 
-        await log_send(ctx, f"Deleted all roles with base name: *{substring}*")
+        await log_send(
+            ctx,
+            self.logger,
+            f"Deleted all roles with base name: *{substring}*",
+        )
 
     @commands.hybrid_command()
     @commands.guild_only()

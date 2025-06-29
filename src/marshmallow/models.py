@@ -17,8 +17,9 @@ class Information:
     full_name: str
     email: str
     role_names: list[str] = field(default_factory=list)
-    alg_names: list[str] = field(default_factory=list)
+    aliases: list[str] = field(default_factory=list)
     affinity_groups: list[str] = field(default_factory=list)
+    found: bool = False
 
 
 @dataclass
@@ -37,7 +38,7 @@ class GuildPerson:
 
     def set_guild_member(
         self,
-        members_to_aliases: dict[discord.Member, list[str]],
+        members_to_guild_names: dict[discord.Member, list[str]],
     ) -> None:
         """Sets guild member associated with the person.
 
@@ -45,20 +46,16 @@ class GuildPerson:
         guild member. If no match is found, then set to None.
 
         Args:
-            members_to_aliases (dict): Mapping between guild members and their aliases.
+            members_to_guild_names (dict): Mapping from guild members to guild names.
         """
-        if not isinstance(members_to_aliases, dict):
-            self.logger.error("Argument members_to_aliases is not of type dict.")
-            return
-
-        if not self.info.alg_names:
+        if not self.info.aliases:
             self.logger.info(
-                "Cannot set associated guild member when person has no alg_names.",
+                "Cannot set associated guild member when person has no aliases.",
             )
             return
 
-        for member, aliases in members_to_aliases.items():
-            if pr.is_name_match(aliases, self.info.alg_names):
+        for member, guild_names in members_to_guild_names.items():
+            if pr.is_name_match(guild_names, self.info.aliases):
                 self.guild_member = member
                 return
 
@@ -69,10 +66,6 @@ class GuildPerson:
         Args:
             override_role (discord.Role | None): A specific role to assign.
         """
-        if not isinstance(override_role, discord.Role | type(None)):
-            self.logger.error("Argument role is not of type discord.Role or NoneType.")
-            return
-
         if not self.guild_member:
             self.logger.info("Cannot set guild roles for unidentifiable person.")
             return
@@ -153,10 +146,10 @@ class GuildPerson:
             "full_name": self.info.full_name,
             "display_name": self.get_display_name(),
             "username": self.get_username(),
-            "discord_roles": self.info.role_names,
+            "role_names": ",".join(self.info.role_names),
             "email": self.info.email,
             "found": bool(self.guild_member),
-            "aliases": self.info.alg_names,
+            "aliases": ",".join(self.info.aliases),
         }
 
 

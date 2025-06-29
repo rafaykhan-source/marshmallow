@@ -38,10 +38,35 @@ class DataServer:
             return [
                 GuildPerson(
                     Information(
-                        row["full_name"],
-                        row["email"],
-                        row["role_names"].split(","),
-                        row["alg_names"].split(","),
+                        full_name=row["full_name"],
+                        email=row["email"],
+                        role_names=row["role_names"].split(","),
+                        aliases=row["aliases"].split(","),
+                    ),
+                )
+                for row in reader
+            ]
+
+    def get_report_people(self, group: str) -> list[GuildPerson]:
+        """Returns the people associated with the group report.
+
+        Args:
+            group (str): The group to retrieve.
+
+        Returns:
+            list[GuildPerson]: The people associated with the group report.
+        """
+        with open(f"assignments/{group}report.csv") as csv_file:
+            self.logger.info("Retrieved Assignment Report People of %s.", group)
+            reader = csv.DictReader(csv_file)
+            return [
+                GuildPerson(
+                    Information(
+                        full_name=row["full_name"],
+                        email=row["email"],
+                        role_names=row["role_names"].split(","),
+                        aliases=row["aliases"].split(","),
+                        found=(row["found"] == "True"),
                     ),
                 )
                 for row in reader
@@ -62,7 +87,7 @@ class DataServer:
                         row["full_name"],
                         row["email"],
                         affinity_groups=row["affinity_groups"].split(","),
-                        alg_names=row["alg_names"].split(","),
+                        aliases=row["aliases"].split(","),
                     ),
                 )
                 for row in reader

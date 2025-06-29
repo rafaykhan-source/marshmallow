@@ -78,9 +78,6 @@ class Auto(commands.Cog):
         Args:
             ctx (commands.Context): The command context.
         """
-        if not ctx.guild:
-            return
-
         self.logger.info(
             "%s called command 'assign_nations' in %s.",
             ctx.author.display_name,
@@ -141,9 +138,6 @@ class Auto(commands.Cog):
         Args:
             ctx (commands.Context): The command context.
         """
-        if not ctx.guild:
-            return
-
         self.logger.info(
             "%s called command 'assign_affinity' in %s.",
             ctx.author.display_name,
@@ -183,13 +177,13 @@ class Auto(commands.Cog):
         ]
 
         text_channels = await dm.get_channel_map(ctx, channel_names)
-        member_alias_map = pr.get_member_alias_map(ctx.guild.members)
+        member_guild_name_map = pr.get_member_guild_name_map(ctx.guild.members)
 
         for person in people:
             member = None
-            alg_names = person.info.alg_names
-            for mem, aliases in member_alias_map.items():
-                if pr.is_name_match(aliases, alg_names):
+            aliases = person.info.aliases
+            for mem, guild_names in member_guild_name_map.items():
+                if pr.is_name_match(guild_names, aliases):
                     member = mem
                     break
 

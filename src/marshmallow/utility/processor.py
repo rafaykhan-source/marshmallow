@@ -1,7 +1,6 @@
 """The processor module is responsible for processing server information."""
 
 import logging
-import re
 from collections.abc import Sequence
 
 import discord
@@ -11,88 +10,57 @@ from marshmallow.models import GuildPerson
 logger = logging.getLogger("assign")
 
 
-def is_name_match(aliases: list[str], alg_names: list[str]) -> bool:
-    """Returns whether there is a match in aliases and alg_names.
-
-    Note that a "match" is really a substring match of alg_name in alias.
+def is_name_match(guild_names: list[str], aliases: list[str]) -> bool:
+    """Returns whether there is a match between an alias and guild name.
 
     Args:
-        aliases (list[str]): Cleaned aliases of an individual (from discord).
-        alg_names (list[str]): Cleaned names of an individual (from spreadsheet).
+        guild_names (list[str]): Guild names of an individual (from discord).
+        aliases (list[str]): Names of an individual (from spreadsheet).
 
     Returns:
-        bool: Presence of a Name Match.
+        bool: Whether a match has occurred.
     """
-    for alg_name in alg_names:
-        for alias in aliases:
-            if alg_name in alias:
+    for alias in aliases:
+        for guild_name in guild_names:
+            if alias in guild_name:
                 return True
 
     return False
 
 
-def _clean_name(name: str) -> str:
-    """Strips name of whitespace, non-alphabetical characters and makes it lowercase.
-
-    Args:
-        name (str): The name to clean.
-
-    Returns:
-        str: The cleaned name.
-    """
-    return re.sub(r"[^a-zA-Z]", "", name).lower()
-
-
-def _clean_aliases(aliases: list[str]) -> list[str]:
-    """Returns clean aliases.
-
-    Args:
-        aliases (list[str]): The aliases to clean.
-
-    Returns:
-        list[str]: The clean aliases.
-    """
-    return [_clean_name(alias) for alias in aliases]
-
-
-def _get_member_aliases(member: discord.Member) -> list[str]:
-    """Returns all clean names associated with guild member.
+def _get_guild_member_names(member: discord.Member) -> list[str]:
+    """Return all names associated with guild member.
 
     Args:
         member (discord.Member): The guild member.
 
     Returns:
-        list[str]: The guild member's clean aliases.
+        list[str]: Names associated with a guild member.
     """
-    aliases = set()
-    res = []
+    names = set()
+    names.add(member.name)
 
-    aliases.add(member.name)
-    res.append(member.name)
-
-    if hasattr(member, "global_name") and member.global_name:
-        aliases.add(member.global_name)
-        res.append(member.global_name)
+    if member.global_name:
+        names.add(member.global_name.strip().lower())
 
     if member.nick:
-        aliases.add(member.nick)
-        res.append(member.nick)
+        names.add(member.nick.strip().lower())
 
-    return [*res, *_clean_aliases(list(aliases))]
+    return list(names)
 
 
-def get_member_alias_map(
+def get_member_guild_name_map(
     members: Sequence[discord.Member],
 ) -> dict[discord.Member, list[str]]:
-    """Returns a mapping of members to their clean aliases.
+    """Returns a mapping of members to their guild names.
 
     Args:
-        members: The members.
+        members: The guild members.
 
     Returns:
-        dict: Mapping of members to aliases.
+        dict: Mapping of members to associated guild names.
     """
-    return {member: _get_member_aliases(member) for member in members}
+    return {member: _get_guild_member_names(member) for member in members}
 
 
 def get_assignment_counts(people: list[GuildPerson]) -> tuple[int, int]:

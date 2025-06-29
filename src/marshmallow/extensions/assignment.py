@@ -163,7 +163,7 @@ class Assignment(commands.Cog):
 
         self.cache_assignment(ctx, assignment_group)
         people = self.server.get_people(assignment_group)
-        member_alias_map = pr.get_member_alias_map(ctx.guild.members)
+        member_alias_map = pr.get_member_guild_name_map(ctx.guild.members)
 
         for person in people:
             person.set_guild_member(member_alias_map)
@@ -208,7 +208,8 @@ class Assignment(commands.Cog):
             ctx.guild.name,
         )
 
-        await ctx.send(embed=du.get_failed_assignments_embed(assignment_group))
+        people = self.server.get_report_people(assignment_group)
+        await ctx.send(embed=du.get_failed_assignments_embed(people, assignment_group))
 
 
 async def setup(bot: commands.Bot) -> None:

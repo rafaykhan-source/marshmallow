@@ -71,21 +71,37 @@ def get_assignment_summary_embed(
     return embed
 
 
-def get_failed_assignments_embed(assignment_group: str) -> Embed:
+def get_failed_assignments_embed(
+    people: list,
+    assignment_group: str,
+) -> Embed:
     """Returns unmatched people embed.
 
     Args:
+        people (list): The list of people.
         assignment_group (str): The assignment group.
 
     Returns:
         Embed: The failed assignments embed.
     """
-    embed = get_basic_embed("Unmatched Person Report")
-    embed.add_field(
-        name="People:",
-        value="\n".join([assignment_group]),
-    )
+    unmatched = [p for p in people if not p.info.found]
+    names = [p.info.full_name for p in unmatched]
+    aliases = [",".join(p.info.aliases) for p in unmatched]
+    roles = [",".join(p.info.role_names) for p in unmatched]
 
+    embed = get_basic_embed(f"Unmatched Person Report: {assignment_group.capitalize()}")
+    embed.add_field(
+        name="Name:",
+        value="\n".join(names),
+    )
+    embed.add_field(
+        name="Aliases:",
+        value="\n".join(aliases),
+    )
+    embed.add_field(
+        name="Roles:",
+        value="\n".join(roles),
+    )
     return embed
 
 

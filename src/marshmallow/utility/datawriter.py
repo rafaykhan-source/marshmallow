@@ -29,7 +29,7 @@ class DataWriter:
                 "full_name",
                 "display_name",
                 "username",
-                "discord_roles",
+                "role_names",
                 "email",
                 "found",
                 "aliases",
