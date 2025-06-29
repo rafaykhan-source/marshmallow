@@ -16,6 +16,7 @@ import marshmallow.utility.processor as pr
 from marshmallow.settings import Server
 from marshmallow.utility.dataproducer import DataServer
 from marshmallow.utility.datawriter import DataWriter
+from marshmallow.utility.dutils import log_send
 
 
 async def is_valid_assignment(ctx: commands.Context, assignment_group: str) -> bool:  # noqa
@@ -116,7 +117,7 @@ class Assignment(commands.Cog):
     @commands.has_permissions(manage_roles=True)
     async def start_assigner(self, ctx: commands.Context) -> None:
         """Starts the automatic role assignment protocol."""
-        await ctx.send("Started Assigner Protocol.")
+        await log_send(ctx, self.logger, "Started Assigner Protocol.")
         self.assigner.start()
 
     @commands.hybrid_command()
@@ -126,7 +127,7 @@ class Assignment(commands.Cog):
     async def stop_assigner(self, ctx: commands.Context) -> None:
         """Stops the automatic role assignment protocol."""
         self.assigner.cancel()
-        await ctx.send("Stopped Assigner Protocol.")
+        await log_send(ctx, self.logger, "Stopped Assigner Protocol.")
 
     @commands.hybrid_command()
     @commands.guild_only()
@@ -148,9 +149,6 @@ class Assignment(commands.Cog):
             assignment_group (str): The assignment group.
             role (discord.Role): An optional override role to assign.
         """
-        if not ctx.guild:
-            return
-
         self.logger.info(
             "%s called command 'assign' for %s in %s.",
             ctx.author.display_name,
@@ -165,19 +163,15 @@ class Assignment(commands.Cog):
         people = self.server.get_people(assignment_group)
         member_alias_map = pr.get_member_guild_name_map(ctx.guild.members)
 
-        for person in people:
-            person.set_guild_member(member_alias_map)
-            person.set_guild_roles(role)
+        for p in people:
+            p.set_guild_member(member_alias_map)
+            p.set_guild_roles(role)
         self.logger.info("Mapped People to Guild Members and Designated Guild Roles.")
 
-        self.logger.info("Starting Role Assignments.")
-        await ctx.send("*Starting Role Assignments.*")
-
-        for person in people:
-            await person.assign_roles(ctx)
-
-        self.logger.info("Finished Role Assignments.")
-        await ctx.send("*Finished Role Assignments.*")
+        await log_send(ctx, self.logger, "*Starting Role Assignments.*")
+        for p in people:
+            await p.assign_roles(ctx)
+        await log_send(ctx, self.logger, "*Finished Role Assignments.*")
 
         self.writer.write_assignment_report(people, assignment_group)
         embed = du.get_assignment_summary_embed(ctx, *pr.get_assignment_counts(people))

@@ -1,6 +1,7 @@
 """The dutils module contains general discord related utility functions."""
 
 import datetime as dt
+import logging
 
 import discord
 from discord import Color, Embed
@@ -15,7 +16,18 @@ class DateTimeConverter:
         return dt.datetime.strptime(s, "%m/%d/%y %I:%M%p").astimezone(dt.UTC)
 
 
-# TODO: Maybe use factory design pattern?
+async def log_send(ctx: commands.Context, logger: logging.Logger, message: str) -> None:
+    """Logs Message and Sends it to the Guild.
+
+    Args:
+        ctx (commands.Context): The command context.
+        logger (logging.Logger): The logger by which to log messages.
+        message (str): The message to log and send.
+    """
+    logger.info(message)
+    await ctx.send(message)
+
+
 def get_basic_embed(title: str | None = None, description: str | None = None) -> Embed:
     """Returns a basic discord embed.
 

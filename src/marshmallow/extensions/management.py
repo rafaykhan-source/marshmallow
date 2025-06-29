@@ -11,18 +11,7 @@ from discord.ext import commands
 
 import marshmallow.settings as stg
 import marshmallow.utility.dchannels as dch
-
-
-async def log_send(ctx: commands.Context, logger: logging.Logger, msg: str) -> None:
-    """Logs Message and Sends it to the Guild.
-
-    Args:
-        ctx (commands.Context): The command context.
-        logger (logging.Logger): The logger by which to log messages.
-        msg (str): The message to log and send.
-    """
-    logger.info(msg)
-    await ctx.send(msg)
+from marshmallow.utility.dutils import log_send
 
 
 class Management(commands.Cog):
@@ -62,17 +51,17 @@ class Management(commands.Cog):
         await log_send(
             ctx,
             self.logger,
-            f"Deleting all channels with substring: *{substring}*.",
+            f"*Deleting all channels with substring '{substring}.'*",
         )
         for ch in channels:
             if substring in ch.name:
                 await ch.delete()
-                await log_send(ctx, self.logger, f"Deleted Channel: *{ch.name}*")
+                await log_send(ctx, self.logger, f"Deleted channel '{ch.name}.'")
 
         await log_send(
             ctx,
             self.logger,
-            f"Deleted channels with base name: *{substring}*",
+            f"*Deleted all channels with substring '{substring}.'*",
         )
 
     @commands.hybrid_command()
@@ -106,10 +95,10 @@ class Management(commands.Cog):
 
         for ch in channels:
             await ch.delete()
-            await log_send(ctx, self.logger, f"Deleted Channel: *{ch.name}*")
+            await log_send(ctx, self.logger, f"Deleted channel '{ch.name}'.")
 
         await category.delete()
-        await log_send(ctx, self.logger, f"Deleted Category, *{category.name}*.")
+        await log_send(ctx, self.logger, f"Deleted category '{category.name}'.")
 
     @commands.hybrid_command()
     @commands.guild_only()
@@ -182,18 +171,16 @@ class Management(commands.Cog):
         await log_send(
             ctx,
             self.logger,
-            f"Cloning Channels: *{base_name}{start} -> {end}*",
+            f"*Cloning Channels from '{base_name}{start}' to '{base_name}{end}'*",
         )
         channel_names = [f"{base_name}{i}" for i in range(start, end)]
-
         for name in channel_names:
             await channel.clone(name=name)
-            await log_send(ctx, self.logger, f"Cloned Channel: *{name}*")
-
+            await log_send(ctx, self.logger, f"Cloned channel '{name}.'")
         await log_send(
             ctx,
             self.logger,
-            f"Cloned Channels: *{base_name}{start} -> {end}*",
+            f"*Cloned Channels from '{base_name}{start}' to '{base_name}{end}'*",
         )
 
     @commands.hybrid_command()
@@ -229,7 +216,7 @@ class Management(commands.Cog):
         await log_send(
             ctx,
             self.logger,
-            f"Created new role '{new_role_name}' from {role.name}",
+            f"*Created new role '{new_role_name}' from '{role.name}.'*",
         )
 
     @commands.hybrid_command()
@@ -266,7 +253,7 @@ class Management(commands.Cog):
         await log_send(
             ctx,
             self.logger,
-            f"Cloning Roles: *{base_name}{start} -> {end}*",
+            f"*Cloning Roles from '{base_name}{start}' to '{base_name}{end}.'*",
         )
         role_names = [f"{base_name}{i}" for i in range(start, end)]
 
@@ -276,9 +263,13 @@ class Management(commands.Cog):
                 permissions=role.permissions,
                 color=role.color,
             )
-            await log_send(ctx, self.logger, f"Cloned Role: *{name}*")
+            await log_send(ctx, self.logger, f"Cloned role '{name}.'")
 
-        await log_send(ctx, self.logger, f"Cloned Roles: *{base_name}{start} -> {end}*")
+        await log_send(
+            ctx,
+            self.logger,
+            f"*Cloned Roles from '{base_name}{start}' to '{base_name}{end}.'*",
+        )
 
     @commands.hybrid_command()
     @commands.guild_only()
