@@ -6,6 +6,7 @@ EBCAO Guilds.
 """
 
 import logging
+import logging.config
 import os
 import random
 import sys

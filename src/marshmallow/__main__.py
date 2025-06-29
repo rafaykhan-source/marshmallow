@@ -2,7 +2,6 @@
 
 import asyncio
 import logging
-import logging.config
 
 import marshmallow.settings as stg
 from marshmallow.bot import MarshmallowBotClient
