@@ -17,7 +17,7 @@ class Shenanigans(commands.Cog):
     """
 
     def __init__(self, bot: commands.Bot) -> None:
-        """Instantiates the Shenanigans Cog."""
+        """Instantiates the cog."""
         self.bot: commands.Bot = bot
         "The cog's associated bot client."
         self.logger = logging.getLogger(__name__)

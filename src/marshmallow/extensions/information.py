@@ -19,7 +19,7 @@ class Information(commands.Cog):
     """Cog for information-related commands."""
 
     def __init__(self, bot: commands.Bot) -> None:
-        """Instantiates the Information cog."""
+        """Instantiates the cog."""
         self.bot = bot
         "The cog's associated bot client."
         self.logger = logging.getLogger(__name__)

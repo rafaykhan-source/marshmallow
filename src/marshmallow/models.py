@@ -59,31 +59,20 @@ class GuildPerson:
                 self.guild_member = member
                 return
 
-    # TODO: Remove Override Role Logic
-    def set_guild_roles(self, override_role: discord.Role | None) -> None:
+    def set_guild_roles(self) -> None:
         """Sets person's designated guild roles based on role_names.
 
         Args:
             override_role (discord.Role | None): A specific role to assign.
         """
         if not self.guild_member:
-            self.logger.info("Cannot set guild roles for unidentifiable person.")
+            self.logger.info("Cannot set guild roles for person with no guild member.")
             return
 
-        self.guild_roles = []
-
-        if override_role:
-            self.guild_roles.append(override_role)
-            return
-
-        if not self.info.role_names:
-            return
-
-        roles = self.guild_member.guild.roles
-        for role_name in self.info.role_names:
-            role = discord.utils.get(roles, name=role_name)
-            if role:
-                self.guild_roles.append(role)
+        self.guild_roles = [
+            discord.utils.get(self.guild_member.guild.roles, name=role_name)
+            for role_name in self.info.role_names
+        ]
 
     def get_display_name(self) -> str | None:
         """Returns the person's display name on discord or None.

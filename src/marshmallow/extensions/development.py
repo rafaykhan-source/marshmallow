@@ -18,12 +18,12 @@ class Development(commands.Cog):
     """Cog for development commands."""
 
     def __init__(self, bot: commands.Bot) -> None:
-        """Instantiates the development cog."""
+        """Instantiates the cog."""
         self.bot: commands.Bot = bot
         "The cog's associated bot client."
         self.logger = logging.getLogger(__name__)
         "The cog's associated logger."
-        self.cog_names: set[str] = stg.get_cog_names()
+        self.cog_names: set[str] = stg.get_cogs()
         "The cogs of the bot."
 
     @commands.hybrid_command()

@@ -20,11 +20,7 @@ class Introductions(commands.Cog):
     """Cog for introductions."""
 
     def __init__(self, bot: commands.Bot) -> None:
-        """Instantiates the Introductions Cog.
-
-        Args:
-            bot (commands.Bot): The bot client.
-        """
+        """Instantiates the cog."""
         self.bot: commands.Bot = bot
         "The cog's associated bot client."
         self.logger = logging.getLogger(__name__)

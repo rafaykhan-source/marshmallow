@@ -3,8 +3,8 @@
 import asyncio
 import logging
 
-import marshmallow.settings as stg
-from marshmallow.bot import MarshmallowBotClient
+from marshmallow.bot import MarshmallowBot
+from marshmallow.settings import get_token
 
 
 async def main() -> None:
@@ -12,12 +12,12 @@ async def main() -> None:
     logger = logging.getLogger("run")
 
     logger.info("Instantiating Marshmallow Bot Client.")
-    marsh = MarshmallowBotClient()
+    marshmallow = MarshmallowBot()
 
     logger.info("Retrieving Token.")
-    token = stg.get_token()
+    token = get_token()
 
-    async with marsh as bot:
+    async with marshmallow as bot:
         logger.info("Starting Marshmallow.")
         await bot.start(token)
 

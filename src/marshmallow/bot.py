@@ -1,11 +1,4 @@
-"""A class representing a MarshmallowBotClient.
-
-This module defines a class representing Marshmallow bot, which
-supports commands/operations relevant for performing/automating
-administrative and managerial tasks on the Princeton Emma
-Bloomberg Center Discords. The MarshmallowBotClient is a
-subclass of discord.py's commands.Bot.
-"""
+"""A custom subclass of commands.Bot representing Marshmallow."""
 
 import logging
 
@@ -14,8 +7,8 @@ from discord.ext import commands
 import marshmallow.settings as stg
 
 
-class MarshmallowBotClient(commands.Bot):
-    """This class contains behavior unique to Marshmallow."""
+class MarshmallowBot(commands.Bot):
+    """A subclass of commands.Bot representing Marshmallow."""
 
     def __init__(self) -> None:
         """Instantiates the bot client."""
@@ -26,15 +19,16 @@ class MarshmallowBotClient(commands.Bot):
             activity=stg.get_random_discord_activity(),
         )
 
+    async def _load_extensions(self) -> None:
+        cogs = stg.get_cogs()
+
+        for cog in cogs:
+            await self.load_extension(f"extensions.{cog}")
+            self.logger.info("Loaded Cog: %s", cog)
+
     async def setup_hook(self) -> None:
-        """Loads bot extensions."""
-        cog_names = stg.get_cog_names()
-
-        for cog_name in cog_names:
-            await self.load_extension(f"extensions.{cog_name}")
-            self.logger.info("Loaded Cog: %s", cog_name)
-
-        return await super().setup_hook()
+        """A coroutine to be called to setup the bot."""
+        await self._load_extensions()
 
     async def on_ready(self) -> None:
         """Event called upon successful login and loaded data."""

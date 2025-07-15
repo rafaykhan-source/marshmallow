@@ -93,11 +93,6 @@ Make zee-group-9 to 14 (inclusive) channels.
 
 Remove all roles with “Spring Mentorship” in its name.
 
-10. /assign_nations
-
-> [!NOTE]
-> This is some hard coded information assigning roles based on the presence of another role.
-
 11. /count_daily_activity channel
 
 Marks daily activity of each person in the channel, producing a csv.

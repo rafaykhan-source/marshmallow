@@ -32,7 +32,6 @@ async def get_channel_map(
             print(channel)
         channel_map[channel] = guild_channel
 
-    print([c.name for c in list(channel_map.values())])
     return channel_map
 
 

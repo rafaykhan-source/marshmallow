@@ -23,7 +23,7 @@ class Management(commands.Cog):
     """
 
     def __init__(self, bot: commands.Bot) -> None:
-        """Instantiates the Management Cog."""
+        """Instantiates the cog."""
         self.bot: commands.Bot = bot
         "The cog's associated bot client."
         self.logger = logging.getLogger(__name__)
@@ -274,37 +274,40 @@ class Management(commands.Cog):
     @commands.hybrid_command()
     @commands.guild_only()
     @commands.has_any_role(*stg.get_admin_roles())
-    @commands.has_permissions(manage_roles=True)
     async def grant_channel_access(
         self,
         ctx: commands.Context,
-        member: discord.Member,
+        entity: discord.Member | discord.Role,
         channel: discord.TextChannel | discord.VoiceChannel,
     ) -> None:
         """Grants member basic access to channel.
 
         Args:
             ctx (commands.Context): The command context.
-            member (discord.Member): The member to grant access.
-            channel (discord.Channel): The channel to give member access to.
+            entity (discord.Member | discord.Role): The member or role to grant access.
+            channel (discord.Channel): The channel to give access to.
         """
-        if (not ctx.guild) or (not channel) or (not member):
+        if (not ctx.guild) or (not channel) or (not entity):
             return
 
         self.logger.info(
             "%s called command 'grant_channel_access' in %s for %s.",
             ctx.author.display_name,
             channel.name,
-            member.name,
+            entity.name,
         )
 
+        if isinstance(entity, discord.Member) and entity in channel.members:
+            name = entity.display_name or entity.name
+            await log_send(ctx, self.logger, f"{name} already has access to {channel}.")
+            return
+
         await channel.set_permissions(
-            target=member,
+            target=entity,
             overwrite=dch.get_basic_access_overwrite(channel),
         )
 
-        self.logger.info("Added %s to %s", member.display_name, channel)
-        await ctx.send(f"Added {member.display_name} to {channel}.")
+        await log_send(ctx, self.logger, f"Added {entity.name} to {channel}.")
 
 
 async def setup(bot: commands.Bot) -> None:

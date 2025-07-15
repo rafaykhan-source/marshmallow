@@ -34,7 +34,7 @@ def _check_token(token: str | None) -> str:
 
 
 def get_token() -> str:
-    """Returns bot token.
+    """Returns the bot token.
 
     Returns:
         str: The bot token.
@@ -55,20 +55,18 @@ def get_token() -> str:
     return token
 
 
-def get_cog_names() -> set[str]:
-    """Returns cog names.
+def get_cogs() -> list[str]:
+    """Returns the cog names.
 
     Returns:
-        set[str]: The cog names.
+        list[str]: The cog names.
     """
-    cogs = set()
-    for f in os.listdir("src/marshmallow/extensions/"):
-        if "__" in f:
-            continue
-        if f.endswith(".py"):
-            cogs.add(f[:-3])
-
-    return cogs
+    path = "src/marshmallow/extensions/"
+    return [
+        f[:-3]
+        for f in os.listdir(path)
+        if (f.endswith(".py")) and not f.startswith("_")
+    ]
 
 
 def get_admin_roles() -> list[str]:
@@ -81,6 +79,7 @@ def get_admin_roles() -> list[str]:
         "Tech Admin",
         "Alumni Admin",
         "Virtual Advisor",
+        "Senior Residential Advisor",
         "Residential Advisor",
     ]
 

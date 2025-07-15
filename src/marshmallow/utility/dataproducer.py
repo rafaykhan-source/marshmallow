@@ -32,7 +32,7 @@ class DataServer:
         Returns:
             list[GuildPerson]: The people associated with the group.
         """
-        with open(f"data/{group}.csv") as csv_file:
+        with open(f"../marshmallow-datapipelines/results/{group}.csv") as csv_file:
             self.logger.info("Retrieved People of %s.", group)
             reader = csv.DictReader(csv_file)
             return [
@@ -40,8 +40,9 @@ class DataServer:
                     Information(
                         full_name=row["full_name"],
                         email=row["email"],
-                        role_names=row["role_names"].split(","),
+                        role_names=row.get("role_names", "").split(","),
                         aliases=row["aliases"].split(","),
+                        affinity_groups=row.get("affinity_groups", "").split(","),
                     ),
                 )
                 for row in reader
@@ -67,27 +68,6 @@ class DataServer:
                         role_names=row["role_names"].split(","),
                         aliases=row["aliases"].split(","),
                         found=(row["found"] == "True"),
-                    ),
-                )
-                for row in reader
-            ]
-
-    def get_affinity_people(self) -> list[GuildPerson]:
-        """Returns affinity group people.
-
-        Returns:
-            list[dict]: The affinity group people.
-        """
-        with open("data/affinity.csv") as csv_file:
-            self.logger.info("Retrieved Affinity People.")
-            reader = csv.DictReader(csv_file)
-            return [
-                GuildPerson(
-                    Information(
-                        row["full_name"],
-                        row["email"],
-                        affinity_groups=row["affinity_groups"].split(","),
-                        aliases=row["aliases"].split(","),
                     ),
                 )
                 for row in reader

@@ -6,82 +6,30 @@ storing assignment result information.
 
 import asyncio
 import logging
+from enum import StrEnum, auto
 
-import discord
 from discord.ext import commands, tasks
 
 import marshmallow.settings as stg
 import marshmallow.utility.dutils as du
 import marshmallow.utility.processor as pr
-from marshmallow.settings import Server
 from marshmallow.utility.dataproducer import DataServer
 from marshmallow.utility.datawriter import DataWriter
 from marshmallow.utility.dutils import log_send
 
 
-async def is_valid_assignment(ctx: commands.Context, assignment_group: str) -> bool:  # noqa
-    """Returns validity of assign command call.
+class Group(StrEnum):
+    """The assignment groups."""
 
-    Checks guild context and relevant constraints.
-
-    Args:
-        ctx (commands.Context): The command context.
-        assignment_group (str): The assignment group.
-
-    Returns:
-        bool: A valid assign command call.
-    """
-    if not ctx.guild:
-        return False
-
-    match ctx.guild.id:
-        case Server.FSI_ONLINE:
-            options = {"online"}
-            if assignment_group not in options:
-                await ctx.send(
-                    f"Invalid assignment group for this guild. Options: {options}.",
-                )
-                return False
-        case Server.FSI_RESIDENTIAL:
-            options = {"residential"}
-            if assignment_group not in options:
-                await ctx.send(
-                    f"Invalid assignment group for this guild. Options: {options}.",
-                )
-                return False
-        case Server.EBCAO_SUMMER:
-            options = {"ebcscholars", "ebcstaff"}
-            if assignment_group not in options:
-                await ctx.send(
-                    f"Invalid assignment group for this guild. Options: {options}.",
-                )
-                return False
-        case Server.SIFP:
-            options = {"sifp", "mentorgroups"}
-            if assignment_group not in options:
-                await ctx.send(
-                    f"Invalid assignment group for this guild. Options: {options}.",
-                )
-                return False
-        case Server.FGLI_CONSORTIUM:
-            options = {"fgli"}
-            if assignment_group not in options:
-                await ctx.send(
-                    f"Invalid assignment group for this guild. Options: {options}.",
-                )
-                return False
-        case _:
-            await ctx.send("Unsupported Guild.")
-            return False
-
-    return True
+    RESIDENTIAL = auto()
+    ONLINE = auto()
 
 
 class Assignment(commands.Cog):
-    """A cog for role assignment commands."""
+    """A cog for assignment commands."""
 
     def __init__(self, bot: commands.Bot) -> None:
-        """Instantiates the Assignment cog."""
+        """Instantiates the cog."""
         self.bot: commands.Bot = bot
         "The cog's associated bot client."
         self.logger = logging.getLogger(__name__)
@@ -136,8 +84,7 @@ class Assignment(commands.Cog):
     async def assign(
         self,
         ctx: commands.Context,
-        assignment_group: str,
-        role: discord.Role | None = None,
+        group: Group,
     ) -> None:
         """Automatically assigns roles for assignment group.
 
@@ -146,26 +93,22 @@ class Assignment(commands.Cog):
 
         Args:
             ctx (commands.Context): The command context.
-            assignment_group (str): The assignment group.
-            role (discord.Role): An optional override role to assign.
+            group (str): The assignment group.
         """
         self.logger.info(
             "%s called command 'assign' for %s in %s.",
             ctx.author.display_name,
-            assignment_group,
+            group,
             ctx.guild.name,
         )
 
-        if not await is_valid_assignment(ctx, assignment_group):
-            return
-
-        self.cache_assignment(ctx, assignment_group)
-        people = self.server.get_people(assignment_group)
+        self.cache_assignment(ctx, group)
+        people = self.server.get_people(group)
         member_alias_map = pr.get_member_guild_name_map(ctx.guild.members)
 
         for p in people:
             p.set_guild_member(member_alias_map)
-            p.set_guild_roles(role)
+            p.set_guild_roles()
         self.logger.info("Mapped People to Guild Members and Designated Guild Roles.")
 
         await log_send(ctx, self.logger, "*Starting Role Assignments.*")
@@ -173,7 +116,7 @@ class Assignment(commands.Cog):
             await p.assign_roles(ctx)
         await log_send(ctx, self.logger, "*Finished Role Assignments.*")
 
-        self.writer.write_assignment_report(people, assignment_group)
+        self.writer.write_assignment_report(people, group)
         embed = du.get_assignment_summary_embed(ctx, *pr.get_assignment_counts(people))
         await ctx.send(embed=embed)
 

@@ -38,7 +38,7 @@ def _get_guild_member_names(member: discord.Member) -> list[str]:
         list[str]: Names associated with a guild member.
     """
     names = set()
-    names.add(member.name)
+    names.add(member.name.strip().lower())
 
     if member.global_name:
         names.add(member.global_name.strip().lower())
