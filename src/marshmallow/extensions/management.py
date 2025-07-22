@@ -274,6 +274,43 @@ class Management(commands.Cog):
     @commands.hybrid_command()
     @commands.guild_only()
     @commands.has_any_role(*stg.get_admin_roles())
+    async def assign_role(
+        self,
+        ctx: commands.Context,
+        condition: discord.Role,
+        role: discord.Role,
+    ) -> None:
+        """Assigns roles conditionally.
+
+        Args:
+            ctx (commands.Context): The command context.
+            condition (discord.Role): The condition.
+            role (discord.Role): The role to assign.
+        """
+        self.logger.info(
+            "%s called command 'assign_role' in %s.",
+            ctx.author.display_name,
+            ctx.guild.name,
+        )
+
+        members = ctx.guild.members
+
+        for m in members:
+            if role in m.roles:
+                continue
+            if condition in m.roles:
+                await m.add_roles(role)
+                await log_send(
+                    ctx,
+                    self.logger,
+                    f"Assigned {m.display_name} {role.name}.",
+                )
+
+        await log_send(ctx, self.logger, "Completed Role Assignments.")
+
+    @commands.hybrid_command()
+    @commands.guild_only()
+    @commands.has_any_role(*stg.get_admin_roles())
     async def grant_channel_access(
         self,
         ctx: commands.Context,
