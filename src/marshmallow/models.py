@@ -30,7 +30,7 @@ class GuildPerson:
     "The person's information."
     guild_member: discord.Member | None = None
     "The guild member associated with the person."
-    logger: logging.Logger = field(init=None)
+    logger: logging.Logger = field(init=False)
 
     def __post_init__(self) -> None:
         """Acquires logger for the GuildPerson."""
