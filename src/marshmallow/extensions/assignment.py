@@ -117,7 +117,8 @@ class Assignment(commands.Cog):
         await log_send(ctx, self.logger, "*Finished Role Assignments.*")
 
         self.writer.write_assignment_report(people, group)
-        embed = du.get_assignment_summary_embed(ctx, *pr.get_assignment_counts(people))
+        found, not_found = pr.get_assignment_counts(people)
+        embed = du.get_assignment_summary_embed(ctx, found, not_found)
         await ctx.send(embed=embed)
 
     @commands.hybrid_command()
