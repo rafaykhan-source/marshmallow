@@ -23,7 +23,7 @@ class Development(commands.Cog):
         "The cog's associated bot client."
         self.logger = logging.getLogger(__name__)
         "The cog's associated logger."
-        self.cog_names: set[str] = stg.get_cogs()
+        self.cog_names: list[str] = stg.get_cogs()
         "The cogs of the bot."
 
     @commands.hybrid_command()
