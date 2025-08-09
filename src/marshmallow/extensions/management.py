@@ -140,6 +140,46 @@ class Management(commands.Cog):
     @commands.guild_only()
     @commands.has_any_role(*stg.get_admin_roles())
     @commands.has_permissions(manage_channels=True)
+    async def clone_channel(
+        self,
+        ctx: commands.Context,
+        channel: discord.TextChannel | discord.VoiceChannel,
+        name: str,
+    ) -> discord.TextChannel | discord.VoiceChannel:
+        """Clones channels across start to end range (exclusive).
+
+        Args:
+            ctx (commands.Context): The command context.
+            channel (discord.TextChannel | discord.VoiceChannel): The channel to clone
+            from.
+            name (str): The name of the new role.
+        """
+        self.logger.info(
+            "%s called command 'clone_channel' on %s in %s.",
+            ctx.author.display_name,
+            channel.name,
+            ctx.guild.name,
+        )
+
+        await log_send(
+            ctx,
+            self.logger,
+            f"*Cloning Channel '{channel.name}' as '{name}'*",
+        )
+
+        new_channel = await channel.clone(name=name)
+        await log_send(
+            ctx,
+            self.logger,
+            f"*Cloned Channel '{channel.name}' as '{name}'*.",
+        )
+
+        return new_channel
+
+    @commands.hybrid_command()
+    @commands.guild_only()
+    @commands.has_any_role(*stg.get_admin_roles())
+    @commands.has_permissions(manage_channels=True)
     async def clone_channels(
         self,
         ctx: commands.Context,
@@ -191,14 +231,14 @@ class Management(commands.Cog):
         self,
         ctx: commands.Context,
         role: discord.Role,
-        new_role_name: str,
-    ) -> None:
-        """Clones specified role giving clone new_role_name.
+        name: str,
+    ) -> discord.Role:
+        """Clones specified role giving clone name.
 
         Args:
             ctx (commands.Context): The command context.
             role (discord.Role): The role to clone from.
-            new_role_name (str): The name of the new role.
+            name (str): The name of the new role.
         """
         self.logger.info(
             "%s called command 'clone_role' on %s in %s.",
@@ -207,8 +247,8 @@ class Management(commands.Cog):
             ctx.guild.name,
         )
 
-        await ctx.guild.create_role(
-            name=new_role_name,
+        new_role = await ctx.guild.create_role(
+            name=name,
             permissions=role.permissions,
             color=role.color,
         )
@@ -216,8 +256,10 @@ class Management(commands.Cog):
         await log_send(
             ctx,
             self.logger,
-            f"*Created new role '{new_role_name}' from '{role.name}.'*",
+            f"*Created new role '{name}' from '{role.name}.'*",
         )
+
+        return new_role
 
     @commands.hybrid_command()
     @commands.guild_only()
