@@ -41,10 +41,14 @@ def _get_guild_member_names(member: discord.Member) -> list[str]:
     names.add(member.name.strip().lower())
 
     if member.global_name:
-        names.add(member.global_name.strip().lower())
+        global_name = member.global_name.strip().lower()
+        names.add(global_name)
+        names.add(global_name.replace(" ", ""))
 
     if member.nick:
-        names.add(member.nick.strip().lower())
+        nick = member.nick.strip().lower()
+        names.add(nick)
+        names.add(nick.replace(" ", ""))
 
     return list(names)
 
