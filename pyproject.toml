@@ -46,7 +46,7 @@ select = [
     "PERF", # Perflint
     "RUF", # Ruff-specific rules
 ]
-ignore = ["ANN101"]
+ignore = ["ANN101", "COM812"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
