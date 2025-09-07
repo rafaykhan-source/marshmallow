@@ -4,7 +4,7 @@ Automates administrative and managerial tasks on Princeton EBCAO Discords.
 
 ## Development Setup
 
-The project uses `ruff`, `mypy`, and `pre-commit` for linting, formatting,
+The project uses `ruff`, `ty`, and `pre-commit` for linting, formatting,
 type-checking, and code consistency checks. You can install all of
 these tools using `uv tool install` and run them on the project
 where the respective tool configurations are stored in the
@@ -34,19 +34,6 @@ mkdir build logs data assignments messages
 
 ```bash
 uv run src/marshmallow
-```
-
-## Usage (Docker Compose)
-
-```bash
-docker compose up --build -d --force-recreate
-```
-
-## Usage (Docker)
-
-```bash
-docker build -t marshmallow-main:latest .
-docker container run --rm --detach --name marsh marshmallow-main
 ```
 
 ## Marshmallow Operations (Archive)
@@ -83,19 +70,19 @@ This allows bot code to be dynamically updated, added, or removed without taking
 
 7. /clone_roles role base_name start end
 
-Make Zee Group 9 to 14 (inclusive) Roles.
+Make Zee Group 9 to 14 roles.
 
-8. /clone_roles channel base_name start end
+8. /clone_channels channel base_name start end
 
-Make zee-group-9 to 14 (inclusive) channels.
+Make zee-group-9 to 14 channels.
+
+> [!NOTE]
+> The commands above are useful for creating channels and roles with the same permissions in bulk.
+
 
 9. /delete_roles base_name
 
 Remove all roles with “Spring Mentorship” in its name.
-
-11. /count_daily_activity channel
-
-Marks daily activity of each person in the channel, producing a csv.
 
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
