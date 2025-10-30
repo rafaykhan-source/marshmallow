@@ -1,5 +1,5 @@
 services:
-  main:
+  bot:
     build: .
     container_name: marshmallow
     volumes:
