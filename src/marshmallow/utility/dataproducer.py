@@ -42,7 +42,9 @@ class DataServer:
                         email=row["email"],
                         role_names=row.get("role_names", "").split(","),
                         aliases=row["aliases"].split(","),
-                        affinity_groups=row.get("affinity_groups", "").split(","),
+                        affinity_groups=row.get("affinity_groups", "").split(",")
+                        if row.get("affinity_groups", "") != ""
+                        else [],
                     ),
                 )
                 for row in reader

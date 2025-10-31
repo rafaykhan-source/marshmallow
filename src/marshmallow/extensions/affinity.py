@@ -82,6 +82,14 @@ class Affinity(commands.Cog):
         management = self.bot.get_cog("Management")
 
         for p in people:
+            if not p.info.affinity_groups:
+                self.logger.info(
+                    "%s has no affinity groups: %s",
+                    p.info.full_name,
+                    p.info.affinity_groups,
+                )
+                continue
+
             p.set_guild_member(member_alias_map)
             if not p.guild_member:
                 continue
