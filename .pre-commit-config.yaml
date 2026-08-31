@@ -3,11 +3,11 @@ ci:
     autoupdate_commit_msg: 'ci: pre-commit autoupdate'
 repos:
   - repo: https://github.com/codespell-project/codespell
-    rev: v2.4.1
+    rev: v2.4.3
     hooks:
     - id: codespell
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.0
+    rev: v0.16.5
     hooks:
       - id: ruff-check
         args: [ --fix ]
